@@ -3,12 +3,12 @@
 <head>
   <base target="_top">
   <meta charset="UTF-8">
-  <title>HanS_AI 시스템(V1.0)</title>
+  <title>HanAI 시스템(V1.0)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
   <style>
-    /* 전체 레이아웃 및 우주 테마 디자인 */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* 전체 레이아웃 및 우주 테마 디자인 유지 */
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
     body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Pretendard', sans-serif; background: #0a0e27; }
 
     @keyframes starfield { 0% { transform: translateY(0); } 100% { transform: translateY(-2000px); } }
@@ -35,7 +35,7 @@
       border-bottom: 1px solid rgba(28, 181, 224, 0.2);
     }
 
-    /* HanS_AI 로고 텍스트 스타일 */
+    /* [수정] HanAI 로고 텍스트 스타일 */
     .logo-section {
       cursor: pointer;
       padding: 8px 16px;
@@ -43,7 +43,7 @@
       user-select: none;
     }
     .logo-text {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 900;
       color: #ffffff;
       letter-spacing: 2px;
@@ -74,6 +74,12 @@
       box-shadow: 0 0 15px rgba(28, 181, 224, 0.3);
     }
 
+    /* [수정] 질의회신DB 글씨색 노란색 강조 */
+    .db-highlight {
+      color: yellow !important;
+      text-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+    }
+
     /* 콘텐츠 영역 (iframe) */
     .content-wrapper { flex: 1; background: #fff; z-index: 10; border-top: 1px solid rgba(28, 181, 224, 0.2); }
     #content-frame { width: 100%; height: 100%; border: none; }
@@ -91,11 +97,11 @@
 
     <header>
       <div class="logo-section" onclick="openPromptPage()">
-        <div class="logo-text">HanS_AI</div>
+        <div class="logo-text">HanAI</div>
       </div>
       
       <div class="nav-area">
-        <button class="nav-btn" onclick="goLink('frame', 'https://script.google.com/macros/s/AKfycbydRT4eYEvv3cG9eNOmmiyXniUmFik7QH-gW_jcC9EpdvJSg3w3Cqv7GIVz6XDNhvAF/exec', this)">질의회신DB</button>
+        <button id="btn-db" class="nav-btn db-highlight" onclick="goLink('frame', 'https://script.google.com/macros/s/AKfycbydRT4eYEvv3cG9eNOmmiyXniUmFik7QH-gW_jcC9EpdvJSg3w3Cqv7GIVz6XDNhvAF/exec', this)">질의회신DB</button>
         
         <button class="nav-btn" onclick="goLink('frame', 'https://script.google.com/macros/s/AKfycbzU6UBeYWfO9_SbvmyM69S6LTznRRgc4y5gNgXgP795_XaEDvOYnRYnby7T0U_5v-4bDQ/exec', this)">휴폐업조회</button>
         
@@ -123,7 +129,7 @@
   </div>
 
   <script>
-    // HanS_AI 로고 클릭 시 프롬프트 추천 탭 활성화
+    // HanAI 로고 클릭 시 프롬프트 추천 탭 로드
     function openPromptPage() {
       const promptBtn = document.getElementById('btn-prompt');
       goLink('frame', 'https://tojidi-debug.github.io/doyaa3/index.html', promptBtn);
@@ -131,10 +137,8 @@
 
     function goLink(type, url, el) {
       if (type === 'new') {
-        // PPT 변환 등 외부 탭 연결
         window.open(url, '_blank');
       } else {
-        // 내부 iframe에서 전환
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         if(el) el.classList.add('active');
         document.getElementById('content-frame').src = url;
@@ -157,8 +161,11 @@
     });
 
     window.onload = function() {
-      // 초기 접속 시 프롬프트 추천 페이지를 기본으로 노출
-      openPromptPage();
+      // [수정] 접속 시 질의회신DB 웹페이지가 바로 보이도록 설정
+      const dbBtn = document.getElementById('btn-db');
+      if (dbBtn) {
+        dbBtn.click();
+      }
     };
   </script>
 
