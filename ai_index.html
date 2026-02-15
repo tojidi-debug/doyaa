@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>한에스시스템</title>
   <style>
-    /* 디자인 테마 유지 */
+    /* 우주 배경 및 로그인 박스 디자인 유지 */
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
     body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Nanum Gothic', sans-serif; background: black; }
     #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background: radial-gradient(ellipse at top, #1a237e 0%, #0a0e27 50%), radial-gradient(ellipse at bottom, #0d1b3e 0%, #000000 100%); }
@@ -44,7 +44,7 @@
     const ALLOWED = ['tojidi@gmail.com', 'kjloveh8@gmail.com', 'wony93680@gmail.com', 'jesussw0410@gmail.com', 'juhlee0420@gmail.com', 'ohdass12@gmail.com', 'kkysky87@gmail.com', 'purityma1@gmail.com'];
     const PW = "ai1234";
 
-    // 1. 기존 이메일이 있다면 불러오기
+    // 저장된 이메일 자동 입력
     window.onload = () => {
       const saved = localStorage.getItem('myVerifiedEmail');
       if (saved) document.getElementById('email').value = saved;
@@ -63,8 +63,8 @@
       const msg = document.getElementById('msg');
 
       if (ALLOWED.includes(email) && pw === PW) {
-        localStorage.setItem('myVerifiedEmail', email); // 이메일 저장
-        location.href = 'aihome.html'; // aihome.html로 이동
+        localStorage.setItem('myVerifiedEmail', email);
+        location.href = 'aihome.html';
       } else {
         msg.innerText = "이메일 또는 비밀번호가 일치하지 않습니다.";
         msg.style.display = 'block';
