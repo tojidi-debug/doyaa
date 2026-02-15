@@ -5,95 +5,451 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>한에스시스템 - 로그인</title>
   <style>
-    /* home.html 기반 우주 테마 디자인 */
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
-    body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Pretendard', sans-serif; background: #0a0e27; }
+    /* 기본 초기화 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
 
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Nanum Gothic', 'NanumGothic', Arial, sans-serif;
+      background: black;
+    }
+
+    /* 로그인 화면 스타일 (우주 배경) */
     #login-screen {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(ellipse at top, #1a237e 0%, #0a0e27 50%), radial-gradient(ellipse at bottom, #0d1b3e 0%, #000000 100%);
-      display: flex; justify-content: center; align-items: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(ellipse at top, #1a237e 0%, #0a0e27 50%),
+        radial-gradient(ellipse at bottom, #0d1b3e 0%, #000000 100%);
     }
 
-    /* 별 배경 애니메이션 */
-    @keyframes starfield { from { transform: translateY(0); } to { transform: translateY(-2000px); } }
+    /* 우주 배경 애니메이션 */
+    @keyframes starfield {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-2000px); }
+    }
+
     .space-bg {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(1px 1px at 20% 30%, white, transparent), radial-gradient(2px 2px at 50% 50%, white, transparent);
-      background-size: 200% 200%; animation: starfield 200s linear infinite; opacity: 0.6; pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(2px 2px at 20% 30%, white, transparent),
+        radial-gradient(2px 2px at 60% 70%, white, transparent),
+        radial-gradient(1px 1px at 50% 50%, white, transparent),
+        radial-gradient(1px 1px at 80% 10%, white, transparent);
+      background-size: 200% 200%;
+      animation: starfield 200s linear infinite;
+      opacity: 0.6;
+      pointer-events: none;
     }
 
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    }
+
+    /* 로그인 박스 */
     .container-box {
-      position: relative; z-index: 10; background: rgba(13, 27, 62, 0.95); backdrop-filter: blur(20px);
-      padding: 50px 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px rgba(28,181,224,0.3) inset;
-      border: 1px solid rgba(28,181,224,0.5); width: 400px; text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(13, 27, 62, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px rgba(28,181,224,0.3) inset;
+      border: 1px solid rgba(28,181,224,0.5);
+      width: 400px;
+      max-width: 90%;
+      text-align: center;
     }
 
-    .logo-text { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 5px; text-shadow: 0 0 15px rgba(28,181,224,0.8); }
-    .logo-version { font-size: 14px; color: #8a2be2; margin-bottom: 30px; }
-    
-    .input-group input {
-      width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid rgba(28,181,224,0.3);
-      border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; text-align: center; font-size: 15px;
+    /* 로고 텍스트 */
+    .logo-text {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 5px;
+      text-shadow: 0 0 15px rgba(28,181,224,0.8);
     }
-    
-    .btn-group { display: flex; gap: 10px; }
-    .login-btn { flex: 2; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #1cb5e0, #000046); color: #fff; font-weight: 600; cursor: pointer; }
-    .clear-btn { flex: 1; padding: 14px; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; background: transparent; color: #ccc; cursor: pointer; }
-    #msg { color: #ff6b6b; font-size: 13px; margin-top: 15px; display: none; }
+
+    .logo-version {
+      font-size: 14px;
+      color: #8a2be2;
+      margin-bottom: 30px;
+    }
+
+    /* 입력 필드 그룹 */
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-field {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .input-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+      font-weight: 500;
+      min-width: 80px;
+      text-align: left;
+    }
+
+    .input-field input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid rgba(28,181,224,0.3);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 14px;
+      -webkit-user-select: text;
+      user-select: text;
+    }
+
+    .input-field input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .input-field input:focus {
+      outline: none;
+      border-color: rgba(28,181,224,0.6);
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* 버튼 그룹 */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .login-btn {
+      flex: 2;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(28,181,224,0.8), rgba(91,134,229,0.8));
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(135deg, rgba(28,181,224,1), rgba(91,134,229,1));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(28,181,224,0.4);
+    }
+
+    .clear-btn {
+      flex: 1;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      background: transparent;
+      color: #ccc;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .clear-btn:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    /* 메시지 */
+    #msg {
+      color: #ff6b6b;
+      font-size: 13px;
+      margin-top: 15px;
+      display: none;
+    }
+
+    /* 우클릭 금지 알림 모달 */
+    #rightClickAlert {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .alert-box {
+      background: #ffffff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      min-width: 300px;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .alert-icon {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 15px;
+      fill: #ff6b6b;
+    }
+
+    .alert-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .alert-message {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .alert-btn {
+      padding: 10px 30px;
+      border: none;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #1cb5e0, #5b86e5);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .alert-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(28, 181, 224, 0.4);
+    }
   </style>
 </head>
-<body oncontextmenu="return false">
+<body ondragstart="return false" onselectstart="return false">
 
   <div id="login-screen">
     <div class="space-bg"></div>
+    <div class="stars" id="stars"></div>
+
     <div class="container-box">
       <div class="logo-text">한에스시스템</div>
       <div class="logo-version">[V1.0]</div>
+      
       <form onsubmit="handleLogin(event)">
         <div class="input-group">
-          <input type="email" id="email" placeholder="이메일 주소" required>
-          <input type="password" id="password" placeholder="비밀번호" required>
+          <div class="input-field">
+            <label class="input-label">Email</label>
+            <input type="email" id="email" placeholder="example@email.com" required autocomplete="email">
+          </div>
+          
+          <div class="input-field">
+            <label class="input-label">비밀번호</label>
+            <input type="password" id="password" placeholder="비밀번호를 입력하세요" required autocomplete="current-password">
+          </div>
         </div>
+        
         <div class="btn-group">
           <button type="submit" class="login-btn">확 인</button>
           <button type="button" class="clear-btn" onclick="clearForm()">Clear</button>
         </div>
+        
         <div id="msg"></div>
       </form>
     </div>
   </div>
 
+  <!-- 우클릭 금지 알림 모달 -->
+  <div id="rightClickAlert">
+    <div class="alert-box">
+      <svg class="alert-icon" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+      </svg>
+      <div class="alert-title">오른쪽 마우스 사용금지</div>
+      <button class="alert-btn" onclick="closeAlert()">확인</button>
+    </div>
+  </div>
+
   <script>
-    const ALLOWED = ['tojidi@gmail.com', 'kjloveh8@gmail.com', 'wony93680@gmail.com', 'jesussw0410@gmail.com', 'juhlee0420@gmail.com', 'ohdass12@gmail.com', 'kkysky87@gmail.com', 'purityma1@gmail.com'];
+    // 허용된 이메일 목록
+    const ALLOWED = [
+      'tojidi@gmail.com',
+      'kjloveh8@gmail.com',
+      'wony93680@gmail.com',
+      'jesussw0410@gmail.com',
+      'juhlee0420@gmail.com',
+      'ohdass12@gmail.com',
+      'kkysky87@gmail.com',
+      'purityma1@gmail.com'
+    ];
+    
     const PASS = "ai1234";
 
-    // 페이지 로드 시 기존 이메일 불러오기
-    window.onload = () => {
+    // 별 배경 효과 생성
+    function createStars() {
+      const starsContainer = document.getElementById('stars');
+      for (let i = 0; i < 80; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        starsContainer.appendChild(star);
+      }
+    }
+
+    // 페이지 로드 시 실행
+    window.onload = function() {
+      createStars();
+      
+      // 기존 저장된 이메일 불러오기
       const savedEmail = localStorage.getItem('lastUserEmail');
-      if (savedEmail) document.getElementById('email').value = savedEmail;
+      if (savedEmail) {
+        document.getElementById('email').value = savedEmail;
+      }
     };
 
+    // 폼 초기화
     function clearForm() {
       document.getElementById('email').value = '';
       document.getElementById('password').value = '';
       document.getElementById('msg').style.display = 'none';
+      document.getElementById('email').focus();
     }
 
+    // 로그인 처리
     function handleLogin(e) {
       e.preventDefault();
-      const email = document.getElementById('email').value.trim().toLowerCase();
-      const pw = document.getElementById('password').value;
+      
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const email = emailInput.value.trim().toLowerCase();
+      const pw = passwordInput.value;
       const msg = document.getElementById('msg');
 
-      if (ALLOWED.includes(email) && pw === PASS) {
-        localStorage.setItem('lastUserEmail', email); // 이메일 저장
-        location.href = 'aihome.html'; // 메인 페이지로 이동
-      } else {
-        msg.innerText = "정보가 일치하지 않습니다.";
+      // 1. 이메일 형식 검증 (@ 포함 여부)
+      if (!email.includes('@')) {
+        msg.innerText = "이메일 주소를 다시 확인하세요";
         msg.style.display = 'block';
+        emailInput.focus();
+        emailInput.select();
+        return;
+      }
+
+      // 2. 허용된 이메일인지 확인
+      if (!ALLOWED.includes(email)) {
+        msg.innerText = "이메일 주소를 다시 확인하세요";
+        msg.style.display = 'block';
+        emailInput.focus();
+        emailInput.select();
+        return;
+      }
+
+      // 3. 비밀번호 확인
+      if (pw !== PASS) {
+        msg.innerText = "비밀번호 틀림. 다시 입력하세요";
+        msg.style.display = 'block';
+        passwordInput.focus();
+        passwordInput.select();
+        return;
+      }
+
+      // 4. 모든 검증 통과 - 로그인 성공
+      localStorage.setItem('lastUserEmail', email);
+      location.href = 'aihome.html';
+    }
+
+    // 우클릭 방지 및 알림 표시
+    document.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      showRightClickAlert();
+      return false;
+    });
+
+    let alertTimeout; // 자동 닫기 타이머
+
+    // 우클릭 알림 표시
+    function showRightClickAlert() {
+      document.getElementById('rightClickAlert').style.display = 'flex';
+      
+      // 5초 후 자동으로 닫고 포커스 설정
+      alertTimeout = setTimeout(() => {
+        closeAlertAndFocus();
+      }, 2000);
+    }
+
+    // 우클릭 알림 닫기 (확인 버튼 클릭 시)
+    function closeAlert() {
+      clearTimeout(alertTimeout); // 타이머 취소
+      closeAlertAndFocus();
+    }
+
+    // 알림 닫고 적절한 입력 필드에 포커스
+    function closeAlertAndFocus() {
+      document.getElementById('rightClickAlert').style.display = 'none';
+      
+      // 이메일이 이미 입력되어 있으면 비밀번호 칸에 포커스, 아니면 이메일 칸에 포커스
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      
+      if (emailInput.value.trim() !== '') {
+        passwordInput.focus();
+      } else {
+        emailInput.focus();
       }
     }
+
+    // 보안: 개발자 도구 차단
+    document.addEventListener('keydown', e => {
+      if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || (e.shiftKey && (e.key === 'I' || e.key === 'J'))))) {
+        e.preventDefault();
+        return false;
+      }
+    });
   </script>
+
 </body>
 </html>
