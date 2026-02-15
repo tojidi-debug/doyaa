@@ -3,24 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>한에스시스템</title>
+  <title>한에스시스템 - 로그인</title>
   <style>
-    /* 우주 배경 및 로그인 박스 디자인 유지 */
+    /* home.html 기반 우주 테마 디자인 */
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
-    body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Nanum Gothic', sans-serif; background: black; }
-    #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; background: radial-gradient(ellipse at top, #1a237e 0%, #0a0e27 50%), radial-gradient(ellipse at bottom, #0d1b3e 0%, #000000 100%); }
-    .space-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(2px 2px at 20% 30%, white, transparent), radial-gradient(1px 1px at 60% 70%, white, transparent); background-size: 200% 200%; animation: starfield 200s linear infinite; opacity: 0.6; pointer-events: none; }
-    @keyframes starfield { 0% { transform: translateY(0); } 100% { transform: translateY(-2000px); } }
-    .container-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(13, 27, 62, 0.95); backdrop-filter: blur(20px); padding: 50px 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px rgba(28,181,224,0.3) inset; border: 1px solid rgba(28,181,224,0.5); width: 400px; text-align: center; }
-    .logo-text { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 5px; text-shadow: 0 0 15px rgba(28,181,224,0.8); }
+    body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Pretendard', sans-serif; background: #0a0e27; }
+
+    #login-screen {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(ellipse at top, #1a237e 0%, #0a0e27 50%), radial-gradient(ellipse at bottom, #0d1b3e 0%, #000000 100%);
+      display: flex; justify-content: center; align-items: center;
+    }
+
+    /* 별 배경 애니메이션 */
+    @keyframes starfield { from { transform: translateY(0); } to { transform: translateY(-2000px); } }
+    .space-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(1px 1px at 20% 30%, white, transparent), radial-gradient(2px 2px at 50% 50%, white, transparent);
+      background-size: 200% 200%; animation: starfield 200s linear infinite; opacity: 0.6; pointer-events: none;
+    }
+
+    .container-box {
+      position: relative; z-index: 10; background: rgba(13, 27, 62, 0.95); backdrop-filter: blur(20px);
+      padding: 50px 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px rgba(28,181,224,0.3) inset;
+      border: 1px solid rgba(28,181,224,0.5); width: 400px; text-align: center;
+    }
+
+    .logo-text { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 5px; text-shadow: 0 0 15px rgba(28,181,224,0.8); }
     .logo-version { font-size: 14px; color: #8a2be2; margin-bottom: 30px; }
-    .input-group input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid rgba(28,181,224,0.3); border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; text-align: center; -webkit-user-select: text; user-select: text; }
+    
+    .input-group input {
+      width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid rgba(28,181,224,0.3);
+      border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; text-align: center; font-size: 15px;
+    }
+    
     .btn-group { display: flex; gap: 10px; }
-    .login-btn { flex: 2; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #1cb5e0, #5b86e5); color: #fff; font-weight: 600; cursor: pointer; }
+    .login-btn { flex: 2; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #1cb5e0, #000046); color: #fff; font-weight: 600; cursor: pointer; }
     .clear-btn { flex: 1; padding: 14px; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; background: transparent; color: #ccc; cursor: pointer; }
+    #msg { color: #ff6b6b; font-size: 13px; margin-top: 15px; display: none; }
   </style>
 </head>
 <body oncontextmenu="return false">
+
   <div id="login-screen">
     <div class="space-bg"></div>
     <div class="container-box">
@@ -35,19 +59,19 @@
           <button type="submit" class="login-btn">확 인</button>
           <button type="button" class="clear-btn" onclick="clearForm()">Clear</button>
         </div>
-        <div id="msg" style="color:#ff6b6b; font-size:13px; margin-top:15px; display:none;"></div>
+        <div id="msg"></div>
       </form>
     </div>
   </div>
 
   <script>
     const ALLOWED = ['tojidi@gmail.com', 'kjloveh8@gmail.com', 'wony93680@gmail.com', 'jesussw0410@gmail.com', 'juhlee0420@gmail.com', 'ohdass12@gmail.com', 'kkysky87@gmail.com', 'purityma1@gmail.com'];
-    const PW = "ai1234";
+    const PASS = "ai1234";
 
-    // 저장된 이메일 자동 입력
+    // 페이지 로드 시 기존 이메일 불러오기
     window.onload = () => {
-      const saved = localStorage.getItem('myVerifiedEmail');
-      if (saved) document.getElementById('email').value = saved;
+      const savedEmail = localStorage.getItem('lastUserEmail');
+      if (savedEmail) document.getElementById('email').value = savedEmail;
     };
 
     function clearForm() {
@@ -59,14 +83,14 @@
     function handleLogin(e) {
       e.preventDefault();
       const email = document.getElementById('email').value.trim().toLowerCase();
-      const pw = document.getElementById('password').value.trim();
+      const pw = document.getElementById('password').value;
       const msg = document.getElementById('msg');
 
-      if (ALLOWED.includes(email) && pw === PW) {
-        localStorage.setItem('myVerifiedEmail', email);
-        location.href = 'aihome.html';
+      if (ALLOWED.includes(email) && pw === PASS) {
+        localStorage.setItem('lastUserEmail', email); // 이메일 저장
+        location.href = 'aihome.html'; // 메인 페이지로 이동
       } else {
-        msg.innerText = "이메일 또는 비밀번호가 일치하지 않습니다.";
+        msg.innerText = "정보가 일치하지 않습니다.";
         msg.style.display = 'block';
       }
     }
