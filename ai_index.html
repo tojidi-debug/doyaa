@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>한에스시스템 - 로그인</title>
+  <title>한에스AI 시스템 - 로그인</title>
   <style>
     /* 기본 초기화 */
     * {
@@ -73,28 +73,60 @@
       background: white;
       border-radius: 50%;
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+      animation: twinkle 3s ease-in-out infinite;
     }
 
-    /* 로그인 박스 */
-    .container-box {
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* 메인 컨테이너 */
+    .main-container {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 1400px;
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+    }
+
+    /* 로그인 박스 */
+    .login-box {
+      flex: 1;
       background: rgba(13, 27, 62, 0.95);
       backdrop-filter: blur(20px);
       padding: 50px 40px;
       border-radius: 20px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px rgba(28,181,224,0.3) inset;
       border: 1px solid rgba(28,181,224,0.5);
-      width: 400px;
-      max-width: 90%;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 420px;
+    }
+
+    /* AI Multi-Compare 박스 - 높이 증가 */
+    .ai-box {
+      flex: 1.2;
+      background: rgba(10, 14, 39, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 30px 30px 24px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px rgba(138,43,226,0.3) inset;
+      border: 1px solid rgba(138,43,226,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 620px;
     }
 
     /* 로고 텍스트 */
     .logo-text {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 800;
       color: #fff;
       margin-bottom: 5px;
@@ -105,6 +137,19 @@
       font-size: 14px;
       color: #8a2be2;
       margin-bottom: 30px;
+    }
+
+    /* AI 타이틀 */
+    .ai-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(138,43,226,0.8);
+      margin-bottom: 4px;
+    }
+
+    .ai-title .accent {
+      color: #FFD700;
     }
 
     /* 입력 필드 그룹 */
@@ -197,8 +242,199 @@
       display: none;
     }
 
-    /* 우클릭 금지 알림 모달 */
-    #rightClickAlert {
+    /* AI Multi-Compare 스타일 - 높이 1.5배 증가 */
+    .prompt-box {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(28,181,224,0.3);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 270px;
+    }
+
+    .prompt-input {
+      flex: 1;
+      width: 100%;
+      padding: 20px 22px;
+      font-size: 14px;
+      border: none;
+      outline: none;
+      resize: vertical;
+      font-family: inherit;
+      line-height: 1.6;
+      min-height: 180px;
+      max-height: 300px;
+      background: #FFFFFF;
+      color: #333;
+      overflow-y: auto;
+    }
+
+    .prompt-input::placeholder { 
+      color: rgba(100, 100, 100, 0.4); 
+    }
+
+    /* 스크롤바 스타일 */
+    .prompt-input::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .prompt-input::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+    }
+
+    .prompt-input::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+
+    .prompt-input::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .prompt-bottom {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px;
+      border-top: 1px solid rgba(28,181,224,0.15);
+      background: rgba(0,0,0,0.2);
+      flex-shrink: 0;
+    }
+
+    /* Claude 버튼 - 청록색 */
+    .btn-claude {
+      flex: 0.6;
+      padding: 10px 12px;
+      background: linear-gradient(135deg, #26A69A 0%, #00796B 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 2px 10px rgba(38,166,154,0.3);
+      white-space: nowrap;
+    }
+
+    .btn-claude:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(38,166,154,0.5);
+    }
+
+    /* Clear 버튼 */
+    .prompt-clear {
+      flex: 0.45;
+      padding: 10px 16px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      background: transparent;
+      color: #ccc;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .prompt-clear:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    /* AI 목록 */
+    .ai-side {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .ai-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(28,181,224,0.2);
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+
+    .ai-row:hover {
+      background: rgba(28,181,224,0.1);
+      border-color: rgba(28,181,224,0.5);
+      box-shadow: 0 4px 16px rgba(28,181,224,0.15);
+    }
+
+    .ai-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .bg-gemini   { background: linear-gradient(135deg, #4285f4, #2962ff); }
+    .bg-perplexity { background: linear-gradient(135deg, #20b2aa, #008b8b); }
+    .bg-genspark { background: linear-gradient(135deg, #e74c8b, #c2185b); }
+
+    .ai-info { flex: 1; min-width: 0; }
+    .ai-name { font-size: 13px; font-weight: 600; color: #eee; }
+    .ai-note { font-size: 10px; color: rgba(255,255,255,0.3); }
+    .ai-note.warn { color: #ff9800; }
+
+    .ai-actions {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .btn-ai {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+      border: none;
+      white-space: nowrap;
+    }
+
+    .btn-open {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-open:hover {
+      background: rgba(28,181,224,0.3);
+      border-color: rgba(28,181,224,0.6);
+      color: #fff;
+    }
+
+    .btn-copy {
+      background: linear-gradient(135deg, #1CB5E0 0%, #0d8ab5 100%);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(28,181,224,0.2);
+    }
+
+    .btn-copy:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(28,181,224,0.4);
+    }
+
+    /* 알림 모달 공통 스타일 */
+    #commonModal {
       display: none;
       position: fixed;
       top: 0;
@@ -217,38 +453,13 @@
       border-radius: 12px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
       text-align: center;
-      min-width: 300px;
-      animation: slideDown 0.3s ease;
+      min-width: 320px;
     }
 
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .alert-icon {
-      width: 50px;
-      height: 50px;
-      margin: 0 auto 15px;
-      fill: #ff6b6b;
-    }
-
-    .alert-title {
-      font-size: 18px;
-      font-weight: 700;
+    .alert-content {
+      font-size: 15px;
+      line-height: 1.6;
       color: #333;
-      margin-bottom: 10px;
-    }
-
-    .alert-message {
-      font-size: 14px;
-      color: #666;
       margin-bottom: 20px;
     }
 
@@ -260,12 +471,36 @@
       color: #fff;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
 
-    .alert-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(28, 181, 224, 0.4);
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+        width: 95%;
+        gap: 20px;
+        align-items: stretch;
+      }
+      
+      .login-box, .ai-box {
+        max-width: none;
+      }
+      
+      .ai-box {
+        max-height: none;
+        padding: 24px 24px 20px;
+        gap: 10px;
+      }
+      
+      .ai-actions {
+        flex-direction: column;
+        gap: 2px;
+      }
+      
+      .btn-ai {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
     }
   </style>
 </head>
@@ -275,41 +510,100 @@
     <div class="space-bg"></div>
     <div class="stars" id="stars"></div>
 
-    <div class="container-box">
-      <div class="logo-text">한에스시스템</div>
-      <div class="logo-version">[V1.0]</div>
-      
-      <form onsubmit="handleLogin(event)">
-        <div class="input-group">
-          <div class="input-field">
-            <label class="input-label">Email</label>
-            <input type="email" id="email" placeholder="example@email.com" required autocomplete="email">
+    <div class="main-container">
+      <div class="login-box">
+        <div class="logo-text">한에스AI 시스템</div>
+        <div class="logo-version">[V1.0]</div>
+        
+        <form onsubmit="handleLogin(event)">
+          <div class="input-group">
+            <div class="input-field">
+              <label class="input-label">Email</label>
+              <input type="email" id="email" placeholder="example@email.com" required autocomplete="email">
+            </div>
+            
+            <div class="input-field">
+              <label class="input-label">비밀번호</label>
+              <input type="password" id="password" placeholder="비밀번호를 입력하세요" required autocomplete="current-password">
+            </div>
           </div>
           
-          <div class="input-field">
-            <label class="input-label">비밀번호</label>
-            <input type="password" id="password" placeholder="비밀번호를 입력하세요" required autocomplete="current-password">
+          <div class="btn-group">
+            <button type="submit" class="login-btn">확 인</button>
+            <button type="button" class="clear-btn" onclick="clearForm()">Clear</button>
+          </div>
+          
+          <div id="msg"></div>
+        </form>
+      </div>
+
+      <div class="ai-box">
+        <div class="ai-title">
+          <span class="accent">AI</span> Multi-Compare
+        </div>
+        
+        <div class="prompt-box">
+          <textarea
+            class="prompt-input"
+            id="promptInput"
+            placeholder="프롬프트를 입력하면, 각 AI에 적용될 프롬프트 복사됩니다"
+          ></textarea>
+          <div class="prompt-bottom">
+            <button class="btn-claude" onclick="submitClaude()">Claude에 적용</button>
+            <button class="prompt-clear" onclick="clearPrompt()">Clear</button>
           </div>
         </div>
-        
-        <div class="btn-group">
-          <button type="submit" class="login-btn">확 인</button>
-          <button type="button" class="clear-btn" onclick="clearForm()">Clear</button>
+
+        <div class="ai-side">
+          <div class="ai-row">
+            <div class="ai-icon bg-gemini">G</div>
+            <div class="ai-info">
+              <div class="ai-name">Gemini</div>
+              <div class="ai-note warn">Ctrl+V 필요</div>
+            </div>
+            <div class="ai-actions">
+              <button class="btn-ai btn-open" onclick="openAI('gemini')">열기</button>
+              <button class="btn-ai btn-copy" onclick="copyAndOpen('gemini')">복사+열기</button>
+            </div>
+          </div>
+          
+          <div class="ai-row">
+            <div class="ai-icon bg-perplexity">P</div>
+            <div class="ai-info">
+              <div class="ai-name">Perplexity</div>
+              <div class="ai-note">perplexity.ai</div>
+            </div>
+            <div class="ai-actions">
+              <button class="btn-ai btn-open" onclick="openAI('perplexity')">열기</button>
+              <button class="btn-ai btn-copy" onclick="copyAndOpen('perplexity')">복사+열기</button>
+            </div>
+          </div>
+          
+          <div class="ai-row">
+            <div class="ai-icon bg-genspark">S</div>
+            <div class="ai-info">
+              <div class="ai-name">Genspark</div>
+              <div class="ai-note">genspark.ai</div>
+            </div>
+            <div class="ai-actions">
+              <button class="btn-ai btn-open" onclick="openAI('genspark')">열기</button>
+              <button class="btn-ai btn-copy" onclick="copyAndOpen('genspark')">복사+열기</button>
+            </div>
+          </div>
         </div>
-        
-        <div id="msg"></div>
-      </form>
+      </div>
     </div>
   </div>
 
-  <!-- 우클릭 금지 알림 모달 -->
-  <div id="rightClickAlert">
+  <div id="commonModal">
     <div class="alert-box">
-      <svg class="alert-icon" viewBox="0 0 24 24">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-      </svg>
-      <div class="alert-title">오른쪽 마우스 사용금지</div>
-      <button class="alert-btn" onclick="closeAlert()">확인</button>
+      <div id="modalIcon">
+        <svg viewBox="0 0 24 24" style="width:50px;height:50px;fill:#ff6b6b;margin-bottom:15px;">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+      </div>
+      <div id="modalText" class="alert-content"></div>
+      <button class="alert-btn" onclick="closeModal()">확인</button>
     </div>
   </div>
 
@@ -328,6 +622,32 @@
     
     const PASS = "ai1234";
 
+    const AI = {
+      claude: { 
+        base: 'https://claude.ai', 
+        url: (p) => `https://claude.ai/new?q=${encodeURIComponent(p)}`, 
+        auto: true 
+      },
+      gemini: { 
+        base: 'https://gemini.google.com/app', 
+        url: (p) => 'https://gemini.google.com/app', 
+        auto: false 
+      },
+      perplexity: { 
+        base: 'https://www.perplexity.ai', 
+        url: (p) => `https://www.perplexity.ai/search?q=${encodeURIComponent(p)}`, 
+        auto: true 
+      },
+      genspark: { 
+        base: 'https://www.genspark.ai', 
+        url: (p) => `https://www.genspark.ai/search?q=${encodeURIComponent(p)}`, 
+        auto: true 
+      }
+    };
+
+    let wins = {};
+    let modalTimeout;
+
     // 별 배경 효과 생성
     function createStars() {
       const starsContainer = document.getElementById('stars');
@@ -344,15 +664,14 @@
     // 페이지 로드 시 실행
     window.onload = function() {
       createStars();
-      
-      // 기존 저장된 이메일 불러오기
       const savedEmail = localStorage.getItem('lastUserEmail');
       if (savedEmail) {
         document.getElementById('email').value = savedEmail;
       }
+      document.getElementById('email').focus();
     };
 
-    // 폼 초기화
+    // 로그인 폼 초기화
     function clearForm() {
       document.getElementById('email').value = '';
       document.getElementById('password').value = '';
@@ -370,7 +689,6 @@
       const pw = passwordInput.value;
       const msg = document.getElementById('msg');
 
-      // 1. 이메일 형식 검증 (@ 포함 여부)
       if (!email.includes('@')) {
         msg.innerText = "이메일 주소를 다시 확인하세요";
         msg.style.display = 'block';
@@ -379,7 +697,6 @@
         return;
       }
 
-      // 2. 허용된 이메일인지 확인
       if (!ALLOWED.includes(email)) {
         msg.innerText = "이메일 주소를 다시 확인하세요";
         msg.style.display = 'block';
@@ -388,7 +705,6 @@
         return;
       }
 
-      // 3. 비밀번호 확인
       if (pw !== PASS) {
         msg.innerText = "비밀번호 틀림. 다시 입력하세요";
         msg.style.display = 'block';
@@ -397,52 +713,138 @@
         return;
       }
 
-      // 4. 모든 검증 통과 - 로그인 성공
       localStorage.setItem('lastUserEmail', email);
-      location.href = 'aihome.html';
+      location.href = 'https://tojidi-debug.github.io/doyaa/aihome.html';
     }
 
-    // 우클릭 방지 및 알림 표시
-    document.addEventListener('contextmenu', e => {
-      e.preventDefault();
-      showRightClickAlert();
-      return false;
-    });
+    // AI 프롬프트 처리
+    function getPrompt() {
+      return document.getElementById('promptInput').value.trim();
+    }
 
-    let alertTimeout; // 자동 닫기 타이머
+    // URL에 안전하지 않은 문자 체크
+    function hasUnsafeCharacters(text) {
+      const unsafeChars = /[<>\[\]{}|\\^`]/;
+      return unsafeChars.test(text);
+    }
 
-    // 우클릭 알림 표시
-    function showRightClickAlert() {
-      document.getElementById('rightClickAlert').style.display = 'flex';
+    // 모달 표시 함수 (3.5초 자동 종료 포함)
+    function showModal(text, isWarning = false) {
+      clearTimeout(modalTimeout);
+      const modal = document.getElementById('commonModal');
+      const modalText = document.getElementById('modalText');
+      const modalIcon = document.getElementById('modalIcon');
       
-      // 5초 후 자동으로 닫고 포커스 설정
-      alertTimeout = setTimeout(() => {
-        closeAlertAndFocus();
-      }, 2000);
+      modalText.innerHTML = text;
+      modalIcon.style.display = isWarning ? 'block' : 'none';
+      modal.style.display = 'flex';
+
+      // 3.5초 후 자동 종료
+      modalTimeout = setTimeout(closeModal, 3500);
     }
 
-    // 우클릭 알림 닫기 (확인 버튼 클릭 시)
-    function closeAlert() {
-      clearTimeout(alertTimeout); // 타이머 취소
-      closeAlertAndFocus();
-    }
-
-    // 알림 닫고 적절한 입력 필드에 포커스
-    function closeAlertAndFocus() {
-      document.getElementById('rightClickAlert').style.display = 'none';
+    // 모달 닫기
+    function closeModal() {
+      clearTimeout(modalTimeout);
+      document.getElementById('commonModal').style.display = 'none';
       
-      // 이메일이 이미 입력되어 있으면 비밀번호 칸에 포커스, 아니면 이메일 칸에 포커스
+      // 로그인 창 포커스 처리
       const emailInput = document.getElementById('email');
-      const passwordInput = document.getElementById('password');
-      
-      if (emailInput.value.trim() !== '') {
-        passwordInput.focus();
-      } else {
+      if (emailInput && emailInput.value.trim() !== '') {
+        const pwInput = document.getElementById('password');
+        if (pwInput) pwInput.focus();
+      } else if(emailInput) {
         emailInput.focus();
       }
     }
 
-    // 보안: 개발자 도구 차단
+    // "Claude에 적용" 버튼
+    function submitClaude() {
+      const prompt = getPrompt();
+      if (!prompt) {
+        alert('프롬프트를 입력해주세요.');
+        return;
+      }
+      
+      navigator.clipboard.writeText(prompt);
+      
+      if (prompt.length <= 50 && !hasUnsafeCharacters(prompt)) {
+        const url = AI.claude.url(prompt);
+        if (wins.claude && !wins.claude.closed) {
+          wins.claude.focus();
+        } else {
+          wins.claude = window.open(url, 'ai_claude');
+        }
+      } else {
+        if (wins.claude && !wins.claude.closed) {
+          wins.claude.focus();
+        } else {
+          wins.claude = window.open(AI.claude.base, 'ai_claude');
+        }
+        showModal(`프롬프트가 클립보드에 복사되었습니다!<br>Claude에서 <b>Ctrl+V</b>로 붙여넣기 하세요.`);
+      }
+    }
+
+    // "열기" 버튼
+    function openAI(service) {
+      const prompt = getPrompt();
+      if (prompt) {
+        navigator.clipboard.writeText(prompt);
+      }
+      
+      const url = AI[service].base;
+      if (wins[service] && !wins[service].closed) {
+        wins[service].focus();
+      } else {
+        wins[service] = window.open(url, `ai_${service}`);
+      }
+      
+      if (prompt) {
+        showModal(`프롬프트가 클립보드에 복사되었습니다!<br><b>Ctrl+V</b>로 붙여넣기 하세요.`);
+      }
+    }
+
+    // "복사+열기" 버튼
+    function copyAndOpen(service) {
+      const prompt = getPrompt();
+      if (!prompt) {
+        alert('프롬프트를 입력해주세요.');
+        return;
+      }
+      
+      navigator.clipboard.writeText(prompt);
+      
+      let url;
+      if (prompt.length > 50) {
+        url = AI[service].base;
+        if (wins[service] && !wins[service].closed) {
+          wins[service].focus();
+        } else {
+          wins[service] = window.open(url, `ai_${service}`);
+        }
+        showModal(`프롬프트가 너무 깁니다 (${prompt.length}자).<br>클립보드에 복사되었습니다. <b>Ctrl+V</b>로 붙여넣기 하세요.`);
+      } else {
+        url = AI[service].url(prompt);
+        if (wins[service] && !wins[service].closed) {
+          wins[service].focus();
+        } else {
+          wins[service] = window.open(url, `ai_${service}`);
+        }
+      }
+    }
+
+    function clearPrompt() {
+      document.getElementById('promptInput').value = '';
+    }
+
+    // 우클릭 방지
+    document.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      showModal('<div style="font-size:18px; font-weight:700; color:#333;">오른쪽 마우스 사용금지</div>', true);
+      return false;
+    });
+
+    // 개발자 도구 차단
     document.addEventListener('keydown', e => {
       if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 'U' || (e.shiftKey && (e.key === 'I' || e.key === 'J'))))) {
         e.preventDefault();
