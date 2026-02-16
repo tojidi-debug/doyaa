@@ -581,7 +581,9 @@
     // 보안 설정 - 우클릭 방지
     document.addEventListener('contextmenu', e => {
       e.preventDefault();
-      showAlert('보안을 위해 우클릭이 제한됩니다.');
+      showAlert('우클릭 금지');
+      // 1초 후 자동으로 알림창 닫기
+      setTimeout(closeAlert, 1000);
     });
 
     // 보안 설정 - 키보드 단축키 방지 (F12, Ctrl+Shift+I, Ctrl+U 등)
@@ -637,7 +639,6 @@
     // 보안 설정 - 복사 방지
     document.addEventListener('copy', e => {
       e.preventDefault();
-      showAlert('보안을 위해 복사가 제한됩니다.');
       return false;
     });
 
@@ -685,19 +686,6 @@
         }
       }, 3000);
     }
-
-    // 개발자 도구 감지 (추가 보안)
-    (function() {
-      const devtools = /./;
-      devtools.toString = function() {
-        showAlert('보안을 위해 개발자 도구 사용이 제한됩니다.');
-      };
-      console.log('%c', devtools);
-    })();
-
-    // Console 메시지 경고
-    console.log('%c경고!', 'color: red; font-size: 50px; font-weight: bold;');
-    console.log('%c이 기능은 개발자용입니다. 누군가가 여기에 무언가를 복사/붙여넣기하라고 했다면, 그것은 사기일 가능성이 높습니다.', 'font-size: 16px;');
   </script>
 
 </body>
