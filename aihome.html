@@ -386,6 +386,16 @@
       border: none;
     }
 
+    /* 숨겨진 iframe */
+    #hidden-frame {
+      width: 100%;
+      height: 0.5px;
+      border: none;
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+    }
+
     /* 커스텀 알림창 */
     #custom-alert {
       display: none;
@@ -474,6 +484,13 @@
           </svg>
           <span class="btn-text">질의회신DB</span>
         </button>
+
+        <button id="btn-review-db" class="nav-btn db-custom-style" onclick="goLink('new', 'https://tojidi-debug.github.io/kicpadb/', this)">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M12,3C7.58,3,4,4.79,4,7s3.58,4,8,4s8-1.79,8-4S16.42,3,12,3z M12,9C8.13,9,5,7.88,5,7s3.13-2,7-2s7,1.12,7,2S15.87,9,12,9z M12,11c-4.42,0-8,1.79-8,4v2c0,2.21,3.58,4,8,4s8-1.79,8-4v-2C20,12.79,16.42,11,12,11z M12,19c-3.87,0-7-1.12-7-2v-2c0-0.88,3.13-2,7-2s7,1.12,7,2v2C19,17.88,15.87,19,12,19z"/>
+          </svg>
+          <span class="btn-text">심사조치DB</span>
+        </button>
         
         <button class="nav-btn" onclick="goLink('frame', 'https://script.google.com/macros/s/AKfycbzU6UBeYWfO9_SbvmyM69S6LTznRRgc4y5gNgXgP795_XaEDvOYnRYnby7T0U_5v-4bDQ/exec', this)">
           <svg class="btn-icon" viewBox="0 0 24 24">
@@ -514,6 +531,7 @@
 
     <div class="content-wrapper">
       <iframe id="content-frame" src="about:blank"></iframe>
+      <iframe id="hidden-frame" src="about:blank"></iframe>
     </div>
   </div>
 
@@ -534,7 +552,14 @@
     // 페이지 이동 함수
     function goLink(type, url, el) {
       if (type === 'new') {
-        window.open(url, '_blank');
+        // 새 창이 아닌 현재 창 전체에서 페이지 이동
+        // 숨겨진 iframe에 먼저 로드
+        document.getElementById('hidden-frame').src = url;
+        
+        // 약간의 지연 후 전체 페이지 이동
+        setTimeout(function() {
+          window.location.href = url;
+        }, 100);
       } else {
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         if(el) el.classList.add('active');
@@ -553,10 +578,67 @@
       document.getElementById('custom-alert').style.display = 'none';
     }
 
-    // 우클릭 방지 보안 설정
+    // 보안 설정 - 우클릭 방지
     document.addEventListener('contextmenu', e => {
       e.preventDefault();
       showAlert('보안을 위해 우클릭이 제한됩니다.');
+    });
+
+    // 보안 설정 - 키보드 단축키 방지 (F12, Ctrl+Shift+I, Ctrl+U 등)
+    document.addEventListener('keydown', e => {
+      // F12 키
+      if (e.keyCode === 123) {
+        e.preventDefault();
+        showAlert('개발자 도구는 사용할 수 없습니다.');
+        return false;
+      }
+      
+      // Ctrl+Shift+I (개발자 도구)
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+        e.preventDefault();
+        showAlert('개발자 도구는 사용할 수 없습니다.');
+        return false;
+      }
+      
+      // Ctrl+Shift+J (콘솔)
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+        e.preventDefault();
+        showAlert('개발자 도구는 사용할 수 없습니다.');
+        return false;
+      }
+      
+      // Ctrl+U (소스 보기)
+      if (e.ctrlKey && e.keyCode === 85) {
+        e.preventDefault();
+        showAlert('소스 보기는 사용할 수 없습니다.');
+        return false;
+      }
+      
+      // Ctrl+Shift+C (요소 검사)
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+        e.preventDefault();
+        showAlert('요소 검사는 사용할 수 없습니다.');
+        return false;
+      }
+    });
+
+    // 보안 설정 - 텍스트 선택 방지
+    document.addEventListener('selectstart', e => {
+      e.preventDefault();
+      return false;
+    });
+
+    // 보안 설정 - 드래그 방지
+    document.addEventListener('dragstart', e => {
+      e.preventDefault();
+      return false;
+    });
+
+    // 보안 설정 - 복사 방지
+    document.addEventListener('copy', e => {
+      e.preventDefault();
+      showAlert('보안을 위해 복사가 제한됩니다.');
+      return false;
     });
 
     // 페이지 로드 시 실행
@@ -603,6 +685,19 @@
         }
       }, 3000);
     }
+
+    // 개발자 도구 감지 (추가 보안)
+    (function() {
+      const devtools = /./;
+      devtools.toString = function() {
+        showAlert('보안을 위해 개발자 도구 사용이 제한됩니다.');
+      };
+      console.log('%c', devtools);
+    })();
+
+    // Console 메시지 경고
+    console.log('%c경고!', 'color: red; font-size: 50px; font-weight: bold;');
+    console.log('%c이 기능은 개발자용입니다. 누군가가 여기에 무언가를 복사/붙여넣기하라고 했다면, 그것은 사기일 가능성이 높습니다.', 'font-size: 16px;');
   </script>
 
 </body>
