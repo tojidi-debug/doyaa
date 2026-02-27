@@ -385,7 +385,7 @@
       -webkit-backdrop-filter: blur(10px);
       padding: 8px 16px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       white-space: nowrap;
       transition: all 0.3s ease;
@@ -512,21 +512,21 @@
           <svg class="btn-icon" viewBox="0 0 24 24">
             <path d="M12,3C7.58,3,4,4.79,4,7s3.58,4,8,4s8-1.79,8-4S16.42,3,12,3z M12,9C8.13,9,5,7.88,5,7s3.13-2,7-2s7,1.12,7,2S15.87,9,12,9z M12,11c-4.42,0-8,1.79-8,4v2c0,2.21,3.58,4,8,4s8-1.79,8-4v-2C20,12.79,16.42,11,12,11z M12,19c-3.87,0-7-1.12-7-2v-2c0-0.88,3.13-2,7-2s7,1.12,7,2v2C19,17.88,15.87,19,12,19z"/>
           </svg>
-          <span class="btn-text">질의회신</span>
+          <span class="btn-text">질의회신DB</span>
         </button>
 
         <button id="btn-review-db" class="nav-btn db-custom-style" onclick="goLink('new', 'https://tojidi-debug.github.io/kicpadb/', this)">
           <svg class="btn-icon" viewBox="0 0 24 24">
             <path d="M12,3C7.58,3,4,4.79,4,7s3.58,4,8,4s8-1.79,8-4S16.42,3,12,3z M12,9C8.13,9,5,7.88,5,7s3.13-2,7-2s7,1.12,7,2S15.87,9,12,9z M12,11c-4.42,0-8,1.79-8,4v2c0,2.21,3.58,4,8,4s8-1.79,8-4v-2C20,12.79,16.42,11,12,11z M12,19c-3.87,0-7-1.12-7-2v-2c0-0.88,3.13-2,7-2s7,1.12,7,2v2C19,17.88,15.87,19,12,19z"/>
           </svg>
-          <span class="btn-text">심사DB</span>
+          <span class="btn-text">심사조치DB</span>
         </button>
 
         <button id="btn-audit-db" class="nav-btn db-custom-style" onclick="goLink('new', 'https://tojidi-debug.github.io/kicpadb/index1.html', this)">
           <svg class="btn-icon" viewBox="0 0 24 24">
             <path d="M12,3C7.58,3,4,4.79,4,7s3.58,4,8,4s8-1.79,8-4S16.42,3,12,3z M12,9C8.13,9,5,7.88,5,7s3.13-2,7-2s7,1.12,7,2S15.87,9,12,9z M12,11c-4.42,0-8,1.79-8,4v2c0,2.21,3.58,4,8,4s8-1.79,8-4v-2C20,12.79,16.42,11,12,11z M12,19c-3.87,0-7-1.12-7-2v-2c0-0.88,3.13-2,7-2s7,1.12,7,2v2C19,17.88,15.87,19,12,19z"/>
           </svg>
-          <span class="btn-text">감리DB</span>
+          <span class="btn-text">감리조치DB</span>
         </button>
 
         <button id="btn-standard-search" class="nav-btn db-custom-style" onclick="goLink('frame', 'https://tojidi-debug.github.io/kicpadb/search.html', this)">
@@ -538,7 +538,7 @@
       </div>
 
       <button class="hans-system-btn" onclick="window.location.href='https://tojidi-debug.github.io/home/'">
-        <span class="btn-text">한에스시스템</span>
+        <span class="btn-text">HanSSystem</span>
       </button>
     </header>
 
@@ -657,10 +657,10 @@
 
     // 페이지 로드 시 실행
     window.onload = function() {
-      // 접속 시 프롬프트 추천 웹페이지가 바로 보이도록 설정
-      const promptBtn = document.getElementById('btn-prompt');
-      if (promptBtn) {
-        promptBtn.click();
+      // 접속 시 기준서검색 웹페이지가 바로 보이도록 설정
+      const standardSearchBtn = document.getElementById('btn-standard-search');
+      if (standardSearchBtn) {
+        standardSearchBtn.click();
       }
       
       // 별과 유성 생성
