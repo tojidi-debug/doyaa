@@ -381,6 +381,39 @@
       box-shadow: 0 0 30px rgba(32, 178, 170, 0.8);
     }
 
+    /* 심사FLOW / 감리FLOW 버튼 스타일 */
+    .flow-btn-style {
+      background: linear-gradient(135deg, #c62828 0%, #e53935 100%) !important;
+      color: #ffffff !important;
+      border: 0 !important;
+      font-weight: 700;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 14px rgba(229, 57, 53, 0.4);
+    }
+
+    .flow-btn-style .btn-text {
+      color: #ffffff !important;
+    }
+
+    .flow-btn-style .btn-icon {
+      fill: #ffffff;
+    }
+
+    .flow-btn-style:hover {
+      background: linear-gradient(135deg, #d32f2f 0%, #ef5350 100%) !important;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 24px rgba(229, 57, 53, 0.65);
+      filter: brightness(1.1);
+    }
+
+    .flow-btn-style.active {
+      box-shadow: 0 0 28px rgba(229, 57, 53, 0.8);
+    }
+
+    .flow-btn-style.active .btn-text {
+      color: #ffffff !important;
+    }
+
     /* HanSSystem 버튼 스타일 - 청록색 바탕 + 노란색 글씨 */
     .hans-system-btn {
       position: relative;
@@ -544,6 +577,20 @@
             <path d="M12,3C7.58,3,4,4.79,4,7s3.58,4,8,4s8-1.79,8-4S16.42,3,12,3z M12,9C8.13,9,5,7.88,5,7s3.13-2,7-2s7,1.12,7,2S15.87,9,12,9z M12,11c-4.42,0-8,1.79-8,4v2c0,2.21,3.58,4,8,4s8-1.79,8-4v-2C20,12.79,16.42,11,12,11z M12,19c-3.87,0-7-1.12-7-2v-2c0-0.88,3.13-2,7-2s7,1.12,7,2v2C19,17.88,15.87,19,12,19z"/>
           </svg>
           <span class="btn-text">기준서검색</span>
+        </button>
+
+        <button id="btn-review-flow" class="nav-btn flow-btn-style" onclick="goLink('frame', 'https://tojidi-debug.github.io/home/review%20flow.html', this)">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+          <span class="btn-text">심사FLOW</span>
+        </button>
+
+        <button id="btn-inspection-flow" class="nav-btn flow-btn-style" onclick="goLink('frame', 'https://tojidi-debug.github.io/home/inspection%20flow.html', this)">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+          <span class="btn-text">감리FLOW</span>
         </button>
 
         <button id="btn-pdf-work" class="nav-btn db-custom-style" onclick="goLink('frame', 'https://tojidi-debug.github.io/kicpadb/pdf.html', this)">
