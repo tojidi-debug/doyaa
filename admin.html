@@ -6,8 +6,7 @@
   <title>Admin 로그인</title>
   <style>
     * {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       box-sizing: border-box;
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -16,24 +15,24 @@
     }
 
     body, html {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       overflow: hidden;
       font-family: 'Pretendard', 'Malgun Gothic', -apple-system, sans-serif;
-      background: black;
+      background: #000;
     }
 
-    /* 우주 배경 */
+    /* ── 로그인 화면 ── */
     #login-screen {
-      position: absolute;
+      position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background:
-        radial-gradient(ellipse at top, #1a237e 0%, #0a0e27 50%),
-        radial-gradient(ellipse at bottom, #0d1b3e 0%, #000000 100%);
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 100;
+      background:
+        radial-gradient(ellipse at top,    #1a237e 0%, #0a0e27 50%),
+        radial-gradient(ellipse at bottom, #0d1b3e 0%, #000000 100%);
     }
 
     @keyframes starfield {
@@ -45,7 +44,7 @@
       50%       { opacity: 1; }
     }
     @keyframes nebula {
-      0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+      0%, 100% { opacity: 0.3; transform: scale(1)   rotate(0deg); }
       50%       { opacity: 0.6; transform: scale(1.1) rotate(5deg); }
     }
 
@@ -75,15 +74,11 @@
       width: 100%; height: 100%;
       background:
         radial-gradient(ellipse at 30% 20%, rgba(138,43,226,0.2) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 80%, rgba(28,181,224,0.2) 0%, transparent 50%);
+        radial-gradient(ellipse at 70% 80%, rgba(28,181,224,0.2)  0%, transparent 50%);
       animation: nebula 15s ease-in-out infinite;
     }
 
-    .stars {
-      position: absolute;
-      width: 100%; height: 100%;
-      pointer-events: none;
-    }
+    .stars { position: absolute; width: 100%; height: 100%; pointer-events: none; }
 
     .star {
       position: absolute;
@@ -98,88 +93,54 @@
     .login-box {
       position: relative;
       z-index: 10;
-      background: rgba(13, 27, 62, 0.95);
+      background: rgba(13,27,62,0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       padding: 52px 44px 44px;
       border-radius: 20px;
-      box-shadow:
-        0 20px 60px rgba(0,0,0,0.5),
-        0 0 50px rgba(255,255,255,0.08) inset;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px rgba(255,255,255,0.08) inset;
       border: 1px solid rgba(255,255,255,0.2);
       width: 420px;
       max-width: 90vw;
     }
 
-    /* 상단 아이콘 */
     .admin-icon {
-      width: 52px;
-      height: 52px;
+      width: 52px; height: 52px;
       background: linear-gradient(135deg, #2a2a3a, #3a3a5a);
       border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       margin: 0 auto 18px;
       box-shadow: 0 0 20px rgba(255,255,255,0.15);
     }
 
-    .admin-icon svg {
-      width: 28px;
-      height: 28px;
-      fill: #ffffff;
-    }
+    .admin-icon svg { width: 28px; height: 28px; fill: #ffffff; }
 
     .logo-text {
-      font-size: 22px;
-      font-weight: 800;
-      color: #ffffff;
-      text-align: center;
-      margin-bottom: 4px;
-      text-shadow: 0 0 14px rgba(255,255,255,0.5);
-      letter-spacing: 1px;
+      font-size: 22px; font-weight: 800; color: #ffffff;
+      text-align: center; margin-bottom: 4px;
+      text-shadow: 0 0 14px rgba(255,255,255,0.5); letter-spacing: 1px;
     }
 
     .logo-sub {
-      font-size: 13px;
-      color: rgba(255,255,255,0.4);
-      text-align: center;
-      margin-bottom: 36px;
-      letter-spacing: 0.5px;
+      font-size: 13px; color: rgba(255,255,255,0.4);
+      text-align: center; margin-bottom: 36px; letter-spacing: 0.5px;
     }
 
-    /* 입력 필드 */
-    .input-field {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
-    }
+    .input-field { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
 
-    .input-label {
-      color: rgba(255,255,255,0.75);
-      font-size: 13px;
-      font-weight: 600;
-      min-width: 72px;
-    }
+    .input-label { color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; min-width: 72px; }
 
     .input-field input {
-      flex: 1;
-      padding: 12px 14px;
+      flex: 1; padding: 12px 14px;
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 8px;
       background: rgba(255,255,255,0.08);
-      color: #fff;
-      font-size: 14px;
-      font-family: inherit;
+      color: #fff; font-size: 14px; font-family: inherit;
       transition: border-color 0.2s;
-      -webkit-user-select: text;
-      user-select: text;
+      -webkit-user-select: text; user-select: text;
     }
 
-    .input-field input::placeholder {
-      color: rgba(255,255,255,0.3);
-    }
+    .input-field input::placeholder { color: rgba(255,255,255,0.3); }
 
     .input-field input:focus {
       outline: none;
@@ -187,66 +148,65 @@
       background: rgba(255,255,255,0.12);
     }
 
-    /* 버튼 */
-    .btn-group {
-      display: flex;
-      gap: 10px;
-      margin-top: 24px;
-    }
+    .btn-group { display: flex; gap: 10px; margin-top: 24px; }
 
     .login-btn {
-      flex: 2;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
+      flex: 2; padding: 14px;
+      border: none; border-radius: 8px;
       background: linear-gradient(135deg, #c62828, #e53935);
-      color: #ffffff;
-      font-weight: 800;
-      font-size: 15px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-family: inherit;
-      box-shadow: 0 4px 14px rgba(229,57,53,0.35);
-      letter-spacing: 1px;
+      color: #ffffff; font-weight: 800; font-size: 15px;
+      cursor: pointer; transition: all 0.3s ease; font-family: inherit;
+      box-shadow: 0 4px 14px rgba(229,57,53,0.35); letter-spacing: 1px;
     }
 
     .login-btn:hover {
       background: linear-gradient(135deg, #d32f2f, #ef5350);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(229,57,53,0.55);
+      transform: translateY(-2px); box-shadow: 0 6px 20px rgba(229,57,53,0.55);
     }
 
     .clear-btn {
-      flex: 1;
-      padding: 14px;
+      flex: 1; padding: 14px;
       border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 8px;
-      background: transparent;
-      color: #aaa;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-family: inherit;
+      border-radius: 8px; background: transparent;
+      color: #aaa; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all 0.3s ease; font-family: inherit;
     }
 
-    .clear-btn:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.4);
-      color: #fff;
+    .clear-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.4); color: #fff; }
+
+    /* ── 로그인 성공 후 전체화면 (URL 변경 없음) ── */
+    #flow-screen {
+      display: none;          /* 로그인 성공 시 flex 전환 */
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      flex-direction: column;
+      background: #000;
+      z-index: 200;
     }
 
-    /* 오류 메시지 */
-    #msg {
-      color: #ff6b6b;
-      font-size: 13px;
-      margin-top: 14px;
-      text-align: center;
-      display: none;
-      font-weight: 600;
+    /* 주소 마스킹용 더미 top iframe (0.5px — 시각적 비표시) */
+    #top-mask {
+      width: 100%;
+      height: 0.5px;
+      min-height: 0;
+      border: none;
+      display: block;
+      flex-shrink: 0;
+      overflow: hidden;
+      visibility: hidden;
+      pointer-events: none;
     }
 
-    /* 모달 */
+    /* 실제 콘텐츠 iframe — 나머지 전체 */
+    #main-frame {
+      width: 100%;
+      flex: 1;
+      border: none;
+      display: block;
+    }
+
+    /* ── 알림 모달 ── */
     #modal {
       display: none;
       position: fixed;
@@ -263,33 +223,27 @@
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 14px;
       padding: 32px 40px;
-      text-align: center;
-      color: #fff;
+      text-align: center; color: #fff;
       box-shadow: 0 0 40px rgba(255,255,255,0.1);
       min-width: 300px;
     }
 
     .modal-box p {
-      font-size: 15px;
-      margin-bottom: 20px;
-      color: rgba(255,255,255,0.9);
-      line-height: 1.6;
+      font-size: 15px; margin-bottom: 20px;
+      color: rgba(255,255,255,0.9); line-height: 1.6;
     }
 
     .modal-ok {
       padding: 10px 28px;
-      border: none;
-      border-radius: 6px;
+      border: none; border-radius: 6px;
       background: linear-gradient(135deg, #c62828, #e53935);
-      color: #ffffff;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
+      color: #ffffff; font-weight: 700; cursor: pointer; font-family: inherit;
     }
   </style>
 </head>
 <body ondragstart="return false" onselectstart="return false">
 
+  <!-- ① 로그인 화면 -->
   <div id="login-screen">
     <div class="space-bg"></div>
     <div class="stars" id="stars"></div>
@@ -297,7 +251,10 @@
     <div class="login-box">
       <div class="admin-icon">
         <svg viewBox="0 0 24 24">
-          <path d="M12 2C9.24 2 7 4.24 7 7s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 10c-3.31 0-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8h-2c0 3.31-2.69 6-6 6z"/>
+          <path d="M12 2C9.24 2 7 4.24 7 7s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0
+                   3c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 10
+                   c-3.31 0-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8h-2
+                   c0 3.31-2.69 6-6 6z"/>
         </svg>
       </div>
       <div class="logo-text">Admin</div>
@@ -312,83 +269,79 @@
           <label class="input-label">비밀번호</label>
           <input type="password" id="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password">
         </div>
-
         <div class="btn-group">
           <button type="button" class="login-btn" onclick="handleLogin()">확 인</button>
-          <button type="button" class="clear-btn" onclick="clearForm()">Clear</button>
+          <button type="button" class="clear-btn"  onclick="clearForm()">Clear</button>
         </div>
-
-        <div id="msg"></div>
       </form>
     </div>
   </div>
 
+  <!-- ② 로그인 성공 후 전체화면 (URL은 admin.html 유지) -->
+  <div id="flow-screen">
+    <iframe id="top-mask"   src="about:blank" tabindex="-1" aria-hidden="true"></iframe>
+    <iframe id="main-frame" src="about:blank" allowfullscreen></iframe>
+  </div>
+
+  <!-- ③ 알림 모달 -->
   <div id="modal">
     <div class="modal-box">
-      <div id="modal-icon" style="margin-bottom:12px;"></div>
       <p id="modal-text"></p>
       <button class="modal-ok" id="modal-close-btn" onclick="closeModal()">Closed</button>
     </div>
   </div>
 
   <script>
+    /* ─ 허용 계정 ─ */
     const ALLOWED = [
       'tojidi@gmail.com',
-      'doyaa@kicpa.kr',
+      'doyaa@kicpa.kr'
     ];
+    const PASS     = 'ai356';
+    const FLOW_URL = 'https://tojidi-debug.github.io/doyaa/flow.html';
 
-    const PASS = 'ai356';
-
-    // 별 생성
-    window.onload = function() {
-      const container = document.getElementById('stars');
+    /* ─ 별 생성 ─ */
+    window.onload = function () {
+      const c = document.getElementById('stars');
       for (let i = 0; i < 80; i++) {
         const s = document.createElement('div');
         s.className = 'star';
-        s.style.left = Math.random() * 100 + '%';
-        s.style.top  = Math.random() * 100 + '%';
+        s.style.left              = Math.random() * 100 + '%';
+        s.style.top               = Math.random() * 100 + '%';
         s.style.animationDelay    = Math.random() * 3 + 's';
         s.style.animationDuration = (2 + Math.random() * 2) + 's';
-        container.appendChild(s);
+        c.appendChild(s);
       }
       const saved = localStorage.getItem('adminEmail');
       if (saved) document.getElementById('email').value = saved;
       document.getElementById('email').focus();
     };
 
+    /* ─ 로그인 처리 ─ */
     function handleLogin() {
       const emailEl = document.getElementById('email');
       const pwEl    = document.getElementById('password');
       const email   = emailEl.value.trim().toLowerCase();
       const pw      = pwEl.value;
 
-      // 이메일 미입력
       if (!email) {
         showModal('승인된 E-mail을 입력하세요', true);
-        setTimeout(closeModal, 2000);
-        emailEl.focus();
-        return;
+        emailEl.focus(); return;
       }
-
-      // 비밀번호 미입력
       if (!pw) {
         showModal('비밀번호를 입력하세요', true);
-        setTimeout(closeModal, 2000);
-        pwEl.focus();
-        return;
+        pwEl.focus(); return;
       }
-
-      // 이메일 또는 비밀번호 불일치
       if (!ALLOWED.includes(email) || pw !== PASS) {
         showModal('정보 불일치, 관리자만 접속 허용', false);
-        // 2초 자동 닫힘 + Closed 버튼 표시
-        clearTimeout(modalTimer);
-        modalTimer = setTimeout(closeModal, 2000);
         return;
       }
 
+      /* ✅ 로그인 성공 — URL 그대로, iframe 전체화면으로 flow.html 표시 */
       localStorage.setItem('adminEmail', email);
-      location.href = 'https://tojidi-debug.github.io/doyaa/flow.html';
+      document.getElementById('main-frame').src       = FLOW_URL;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('flow-screen').style.display  = 'flex';
     }
 
     function clearForm() {
@@ -397,16 +350,13 @@
       document.getElementById('email').focus();
     }
 
+    /* ─ 모달 ─ */
     let modalTimer;
 
-    // autoClose: true → 2초 자동 닫힘 (Closed 버튼 숨김)
-    // autoClose: false → Closed 버튼 표시 + 2초 자동 닫힘 병행
-    function showModal(text, autoClose) {
-      document.getElementById('modal-text').innerHTML = text;
-      const btn = document.getElementById('modal-close-btn');
-      // 미입력 케이스: 버튼 숨기고 2초 자동닫힘
-      // 불일치 케이스: 버튼 보이고 2초 자동닫힘 병행
-      btn.style.display = autoClose ? 'none' : 'inline-block';
+    function showModal(text, autoOnly) {
+      document.getElementById('modal-text').innerHTML       = text;
+      document.getElementById('modal-close-btn').style.display =
+        autoOnly ? 'none' : 'inline-block';
       document.getElementById('modal').style.display = 'flex';
       clearTimeout(modalTimer);
       modalTimer = setTimeout(closeModal, 2000);
@@ -417,31 +367,23 @@
       document.getElementById('modal').style.display = 'none';
     }
 
-    // Enter 키로도 로그인
+    /* ─ 보안: Enter 로그인 + 개발자도구/소스보기 차단 ─ */
     document.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        handleLogin();
-        return;
-      }
-      // 개발자 도구 차단
+      if (e.key === 'Enter') { handleLogin(); return; }
       if (
         e.key === 'F12' ||
         (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
         (e.ctrlKey && e.key.toUpperCase() === 'U')
-      ) {
-        e.preventDefault();
-      }
+      ) { e.preventDefault(); e.stopPropagation(); }
     });
 
-    // 우클릭 완전 차단
+    /* ─ 보안: 우클릭 완전 차단 ─ */
     document.addEventListener('contextmenu', e => {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
+      e.preventDefault(); e.stopPropagation(); return false;
     });
 
-    // 드래그/선택 방지
-    document.addEventListener('dragstart', e => e.preventDefault());
+    /* ─ 보안: 드래그·선택 방지 ─ */
+    document.addEventListener('dragstart',   e => e.preventDefault());
     document.addEventListener('selectstart', e => {
       if (!['INPUT','TEXTAREA'].includes(e.target.tagName)) e.preventDefault();
     });
