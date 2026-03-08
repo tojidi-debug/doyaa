@@ -1,462 +1,769 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF 플립북 뷰어</title>
-    
-    <!-- PDF.js 라이브러리 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-    </script>
-    
-    <!-- Turn.js 라이브러리 (페이지 넘김 효과) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://raw.githack.com/blasten/turn.js/master/turn.min.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <base target="_top">
+  <meta charset="UTF-8">
+  <title>HanAI FLOW</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <style>
+    /* 전체 레이아웃 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      user-select: none;
+    }
 
-        body {
-            font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-            background-color: #f5f5f5;
-        }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Pretendard', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0e27;
+    }
 
-        /* 왼쪽 사이드바 - 추가 10% 축소 */
-        #sidebar {
-            width: 190px;
-            background-color: #ffffff;
-            border-right: 1px solid #e0e0e0;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-            flex-shrink: 0;
-        }
+    /* 우주 배경 애니메이션 */
+    @keyframes starfield {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-2000px); }
+    }
 
-        .sidebar-header {
-            padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
-            background-color: #fafafa;
-        }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
 
-        .sidebar-header h2 {
-            font-size: 15px;
-            color: #333;
-            font-weight: 600;
-        }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
 
-        .pdf-list {
-            list-style: none;
-            padding: 10px;
-            overflow-y: auto;
-        }
+    @keyframes nebula {
+      0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+      50% { opacity: 0.6; transform: scale(1.1) rotate(5deg); }
+    }
 
-        .pdf-list li {
-            margin-bottom: 5px;
-        }
+    @keyframes cosmicDust {
+      0% { transform: translateX(-100%) translateY(-100%); opacity: 0; }
+      50% { opacity: 0.3; }
+      100% { transform: translateX(100%) translateY(100%); opacity: 0; }
+    }
 
-        .pdf-item {
-            width: 100%;
-            padding: 10px 12px;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            text-align: left;
-            cursor: pointer;
-            font-size: 13px;
-            color: #000;
-            font-weight: normal;
-            transition: all 0.2s ease;
-        }
+    @keyframes shootingStar {
+      0% {
+        transform: translateX(0) translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(300px) translateY(200px);
+        opacity: 0;
+      }
+    }
 
-        .pdf-item:hover {
-            background-color: #f0f0f0;
-        }
+    @keyframes aiGlow {
+      0%, 100% { 
+        text-shadow: 
+          0 0 10px rgba(28, 181, 224, 0.8),
+          0 0 20px rgba(138, 43, 226, 0.5),
+          0 0 30px rgba(28, 181, 224, 0.3);
+      }
+      50% { 
+        text-shadow: 
+          0 0 15px rgba(28, 181, 224, 1),
+          0 0 30px rgba(138, 43, 226, 0.7),
+          0 0 45px rgba(28, 181, 224, 0.5);
+      }
+    }
 
-        .pdf-item.active {
-            background-color: #87CEEB;
-            color: white;
-            font-weight: bold;
-        }
+    /* 메인 컨테이너 */
+    .wrapper {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: 
+        radial-gradient(ellipse at top, #1a237e 0%, #0a0e27 50%),
+        radial-gradient(ellipse at bottom, #0d1b3e 0%, #000000 100%);
+      overflow: hidden;
+    }
 
-        /* 오른쪽 메인 영역 */
-        #main-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
-            position: relative;
-            overflow: hidden;
-            min-width: 500px;
-        }
+    /* 우주 배경 레이어 */
+    .space-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(2px 2px at 20% 30%, white, transparent),
+        radial-gradient(2px 2px at 60% 70%, white, transparent),
+        radial-gradient(1px 1px at 50% 50%, white, transparent),
+        radial-gradient(1px 1px at 80% 10%, white, transparent),
+        radial-gradient(2px 2px at 90% 60%, white, transparent),
+        radial-gradient(1px 1px at 33% 50%, white, transparent),
+        radial-gradient(2px 2px at 79% 53%, white, transparent),
+        radial-gradient(1px 1px at 17% 93%, white, transparent),
+        radial-gradient(2px 2px at 26% 75%, white, transparent),
+        radial-gradient(1.5px 1.5px at 45% 15%, white, transparent);
+      background-size: 200% 200%;
+      animation: starfield 200s linear infinite;
+      opacity: 0.6;
+      pointer-events: none;
+    }
 
-        /* 책 컨테이너 */
-        #book-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+    /* 성운 효과 강화 */
+    .space-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(ellipse at 30% 20%, rgba(138, 43, 226, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(28, 181, 224, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(91, 134, 229, 0.15) 0%, transparent 60%);
+      animation: nebula 15s ease-in-out infinite;
+    }
 
-        #flipbook {
-            width: 100%;
-            height: 100%;
-            display: none;
-        }
+    /* 우주 먼지 레이어 */
+    .space-bg::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(45deg, transparent 40%, rgba(138, 43, 226, 0.05) 50%, transparent 60%),
+        linear-gradient(-45deg, transparent 40%, rgba(28, 181, 224, 0.05) 50%, transparent 60%);
+      background-size: 200% 200%;
+      animation: cosmicDust 30s linear infinite;
+    }
 
-        .page {
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
+    /* 반짝이는 별 효과 */
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
 
-        .page canvas {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+      animation: twinkle 3s ease-in-out infinite;
+    }
 
-        /* 네비게이션 버튼 - 작고 깔끔하게 */
-        .nav-controls {
-            position: absolute;
-            bottom: 20px;
-            display: flex;
-            gap: 8px;
-            z-index: 100;
-        }
+    /* 유성 효과 */
+    .shooting-star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.8);
+      animation: shootingStar 2s ease-out;
+    }
 
-        .nav-btn {
-            padding: 6px 14px;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #333;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 400;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
+    /* 상단 헤더 - 은하수 배경 이미지 */
+    header {
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB4AAAAB4CAIAAACcpnhrAABOy0lEQVR4nO2dd5zU1PrGnyh1C2Vt1CtL2VU67C6LDQWuXaQKKKg0sSBgQZoCoggsogiIFGkqSJGmKBdERLCxbKGrLCh4VdSfykVAiv6R3x/Znc3MZDIpJzknyftlPyE7kzl58+bk7MyTZ94jXVy5pQwReXvlJAD3dB/FOQ6J8/5FR4KY/ccaI57tnvPsSlMvSU5OBNCgQR0AGRlNAGRlNVGe6trtloiNV6/eCCAvbx+AgoJ9AA4dOgrg1Km/LEQrAYBkqodKonXo4vAtRiX7qvdFUZwb5aSpTl3pr8zOJ5NMygAgu3lKZF7d2YFToIGMkjNj4PyoN47N1InDh42eUvyLO0chNkqnhWwpDzo598fIFKheYepyUxD+/c8HK6cBuL3743x2z7v/LJg1of+gZzgHoYMkCdJ/lPexafUuB5DZsjGA7Izi97HdOt4c2mzVu5tC67kF+wDkF+4HUPTt97D6PlYP3v1HdIQff/R5anBfAAN6dUxOTp42Z4ny4IszFzHbAfUffQyPPxvefBHAbfc95Wg4whH4/rN99WwAbbo+rP20x8cfxwl8/9FHuqhSCzE70LJ3JgO4+66RnOOgDqSPjwagkeN7KCuTx61g1ebx/xVGPJKS0tJ+swalZ5FVJcmKfq6NrPObRwlJz6VL9VOOiIZy1Kq1VLoqQ7s8/kgoufjg0uVlVhSLJ0NPnTRi2KgcX0nPUsxfdLcEwPQWlhzjlzg7ML4lD7zeN3T58ZstAGpd0T7sUdUVtHrVZABdu8Z+F+qj9z+OwLX/nDyWD6BSjUyeQegjjACtz6mf8gAk18xye8e+Hn8Y4JfxZ/jgflNmLmTfLvUffQyPP/95ayqAW+8dFnfLTUtfBnBzrydsBSYIge8/n66ZA+C6Lg9pP+2X8ccpAt9/9CnDO4CY8JeeiYAxedyKkeN7WFafw6zQmU0BZGU1WbVqY3Z209q1a4Q2mzdvYmi9xAq9F/as0AFHGeTpD6FNJA/mMG7Aa5dMBtC5N/01KebGtq6LCNyJfBeoGjAYjh2hvchau2C1F4IgDKCoz8qK0Bq0F0iumbVw1gTeURAEwQcj0jPhP2JKz7H5/cAnAC5udAPzYPzNxsVTAdzSJ0AXmhAC9CefvQHghmvv5x0IEXTseJ8V7biw8ICy/OnY5wBq1rxm3ryJzZrdcfx4IRjZnwlNSIa2jxc1aCIuUyeNUFZubJuVkpKyZ8eqzVvzAEDCsNEv8ozMaaLN0VL4r0p3l5jW8lHvQv1dAhqhBCPS+xyFnveZEIDiwhH16yCqcISaha+ViqdhhSMOHwXd9ScIgmCET7zPBEE4jBACNEH4npSUlmrvs9OI/L16R2NTGvdFbWhX62+o9yr7SCpzxPvsZuUKCZAlSHLJ0sz2JVsPG5UTen7PjlXNWncL60g+QYr4P+zxWEdZ3NON5dZ6UColWh1JuFc6Z3L/ESMXOBAEQfgTRTsu2HUgtJy7YAWAd5e+uHXr1rZt20LwEhwEQQCO1N8gCMJ1yPtsDc95n3/btxXAJU3aWm7hAnbBWOeGa+8n+zPhM2rWuKZmjWucaDlu7eTAqs8u78UpQuKgrQka7e0fsFyfm1ltb9HwSt3k0v6jEeXmrXmeOZC4FB+jVKoyS6VPAFLxBJ4GiuU7ngpJHW34gwAg5UzuDwk5Of2dDEIU9u9YvX/Hat5RxMA3V4cBHhrQk3cIDlKpRuaqdRt5R8GHnR+9ufOjN3lHQRAEQRAEEQk5oAnCWZRCz+4g+CdmN8Pzj4lXxX+PfALgX3Wt33I0SEn2JMm16QQFRy1ICX2RBQAp7L/IOhuWb5vIrtSgiXRAFz8_V');
+      background-size: cover;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      box-shadow: 
+        0 4px 30px rgba(0, 0, 0, 0.5),
+        inset 0 -1px 0 rgba(28, 181, 224, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100;
+    }
 
-        .nav-btn:hover:not(:disabled) {
-            background-color: #ffffff;
-            border-color: #bbb;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        }
+    /* HanAI 로고 섹션 */
+    .logo-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 24px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      padding: 5px 10px;
+      position: relative;
+    }
 
-        .nav-btn:disabled {
-            background-color: rgba(255, 255, 255, 0.5);
-            color: #999;
-            cursor: not-allowed;
-            border-color: #eee;
-        }
+    .logo-section:hover {
+      transform: scale(1.05);
+    }
 
-        /* 클릭 존 */
-        .click-zone {
-            position: absolute;
-            top: 0;
-            bottom: 70px;
-            width: 40%;
-            cursor: pointer;
-            z-index: 50;
-        }
+    .logo-text {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      position: relative;
+      z-index: 1;
+    }
 
-        #zone-prev {
-            left: 0;
-            cursor: w-resize;
-        }
+    /* Han 부분 스타일 */
+    .logo-text .han {
+      color: #ffffff;
+      text-shadow: 
+        0 0 10px rgba(28, 181, 224, 0.8),
+        0 0 20px rgba(138, 43, 226, 0.5);
+    }
 
-        #zone-next {
-            right: 0;
-            cursor: e-resize;
-        }
+    /* AI 부분 기본 스타일 */
+    .logo-text .ai-letter {
+      color: #FFD700;
+      display: inline-block;
+    }
 
-        /* 로딩 화면 */
-        #loading {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.95);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-        }
+    /* A 글자 - 첫 번째로 빛남 */
+    .logo-text .ai-a {
+      animation: aiGlowSequence 3s ease-in-out infinite;
+    }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #4CAF50;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
+    /* I 글자 - 두 번째로 빛남 (0.5초 지연) */
+    .logo-text .ai-i {
+      animation: aiGlowSequence 3s ease-in-out 0.5s infinite;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    @keyframes aiGlowSequence {
+      0%, 40%, 100% { 
+        text-shadow: 
+          0 0 5px rgba(255, 215, 0, 0.5),
+          0 0 10px rgba(255, 215, 0, 0.3);
+        transform: scale(1);
+      }
+      20% { 
+        text-shadow: 
+          0 0 15px rgba(255, 215, 0, 1),
+          0 0 30px rgba(255, 215, 0, 0.9),
+          0 0 45px rgba(255, 215, 0, 0.7),
+          0 0 60px rgba(255, 215, 0, 0.5);
+        transform: scale(1.1);
+      }
+    }
 
-        #loading p {
-            font-size: 16px;
-            color: #555;
-        }
+    /* 반쪽 원 효과 - 오른쪽에 배치 */
+    .logo-section::before {
+      content: '';
+      position: absolute;
+      right: -15px;
+      width: 50px;
+      height: 50px;
+      border: 2px solid rgba(28, 181, 224, 0.5);
+      border-left: 2px solid transparent;
+      border-radius: 50%;
+      animation: rotateHalfCircle 4s linear infinite;
+      z-index: 0;
+    }
 
-        /* 페이지 카운터 - 작고 깔끔하게 */
-        #page-counter {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(255, 255, 255, 0.95);
-            color: #333;
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            border: 1px solid #ddd;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            z-index: 100;
-        }
+    .logo-section::after {
+      content: '';
+      position: absolute;
+      right: -18px;
+      width: 56px;
+      height: 56px;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      border-left: 1px solid transparent;
+      border-radius: 50%;
+      animation: rotateHalfCircleReverse 5s linear infinite;
+      z-index: 0;
+    }
 
-        /* 반응형: 최소 너비 제한 */
-        @media (max-width: 690px) {
-            #main-area {
-                min-width: 500px;
-            }
-        }
-    </style>
+    @keyframes rotateHalfCircle {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes rotateHalfCircleReverse {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
+    }
+
+    /* 네비게이션 영역 */
+    .nav-area {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+      align-items: center;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-area::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* 일반 버튼 스타일 */
+    .nav-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(28, 181, 224, 0.3);
+      border-radius: 10px;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-btn:hover {
+      background: rgba(28, 181, 224, 0.3);
+      border-color: rgba(28, 181, 224, 0.8);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(28, 181, 224, 0.4);
+    }
+
+    .nav-btn.active {
+      background: rgba(28, 181, 224, 0.3);
+      border-color: rgba(28, 181, 224, 0.8);
+      box-shadow: 0 0 20px rgba(28, 181, 224, 0.5);
+    }
+
+    .nav-btn.active .btn-text {
+      color: #FFD700 !important;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+    }
+
+    .db-custom-style.active .btn-text {
+      color: #FFD700 !important;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+    }
+
+    .btn-icon {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .btn-text {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* 질의회신DB 버튼 특별 스타일 - 청록색 바탕 + 연한 노란색 글씨 */
+    .db-custom-style {
+      background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%) !important;
+      color: #FFFFE0 !important;
+      border: 2px solid #20B2AA !important;
+      font-weight: 700;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 15px rgba(32, 178, 170, 0.4);
+    }
+
+    .db-custom-style:hover {
+      background: linear-gradient(135deg, #00AAAA 0%, #40E0D0 100%) !important;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 25px rgba(32, 178, 170, 0.6);
+      filter: brightness(1.1);
+    }
+
+    .db-custom-style.active {
+      box-shadow: 0 0 30px rgba(32, 178, 170, 0.8);
+    }
+
+    /* 심사FLOW / 감리FLOW 버튼 - 레드 배경, 흰 글씨, 별 아이콘, 테두리 없음 */
+    .flow-btn-style {
+      background: linear-gradient(135deg, #c62828 0%, #e53935 100%) !important;
+      color: #ffffff !important;
+      border: 0 !important;
+      font-weight: 700;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 14px rgba(229, 57, 53, 0.4);
+    }
+
+    .flow-btn-style .btn-text {
+      color: #ffffff !important;
+    }
+
+    .flow-btn-style .btn-icon {
+      fill: #ffffff;
+    }
+
+    .flow-btn-style:hover {
+      background: linear-gradient(135deg, #d32f2f 0%, #ef5350 100%) !important;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 24px rgba(229, 57, 53, 0.65);
+      filter: brightness(1.1);
+    }
+
+    .flow-btn-style.active {
+      box-shadow: 0 0 28px rgba(229, 57, 53, 0.8);
+    }
+
+    .flow-btn-style.active .btn-text {
+      color: #ffffff !important;
+    }
+
+    /* HanSSystem 버튼 스타일 - 청록색 바탕 + 노란색 글씨 */
+    .hans-system-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 2px solid #20B2AA;
+      border-radius: 10px;
+      color: #FFD700;
+      background: linear-gradient(135deg, #008B8B 0%, #20B2AA 100%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(32, 178, 170, 0.4);
+      margin-left: 10px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .hans-system-btn:hover {
+      background: linear-gradient(135deg, #00AAAA 0%, #40E0D0 100%);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 25px rgba(32, 178, 170, 0.6);
+      filter: brightness(1.1);
+    }
+
+    /* 콘텐츠 영역 */
+    .content-wrapper {
+      flex: 1;
+      background: #fff;
+      z-index: 10;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #content-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* 숨겨진 iframe */
+    #hidden-frame {
+      width: 100%;
+      height: 0.5px;
+      border: none;
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+    }
+
+    /* 커스텀 알림창 */
+    #custom-alert {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      color: #fff;
+      border: 2px solid #1CB5E0;
+      box-shadow: 0 0 40px rgba(28, 181, 224, 0.5);
+      max-width: 400px;
+      min-width: 300px;
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .modal-icon {
+      width: 24px;
+      height: 24px;
+      fill: #1CB5E0;
+    }
+
+    .modal-message {
+      margin: 20px 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .modal-btn {
+      background: linear-gradient(135deg, #1CB5E0 0%, #0d8ab5 100%);
+      color: #fff;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(28, 181, 224, 0.3);
+    }
+
+    .modal-btn:hover {
+      background: linear-gradient(135deg, #0d8ab5 0%, #1CB5E0 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(28, 181, 224, 0.5);
+    }
+  </style>
 </head>
 <body>
-    <!-- 왼쪽 사이드바 -->
-    <div id="sidebar">
-        <div class="sidebar-header">
-            <h2>List Click!</h2>
+
+  <div class="wrapper">
+    <div class="space-bg"></div>
+
+    <header>
+      <div class="logo-section" onclick="location.href='https://tojidi-debug.github.io/home/'">
+        <div class="logo-text">
+          <span class="han">Han</span><span class="ai-letter ai-a">A</span><span class="ai-letter ai-i">I</span>
         </div>
-        <ul class="pdf-list">
-            <li>
-                <button class="pdf-item active" onclick="loadPDF('https://tojidi-debug.github.io/doyaa/Ye-Joon\'s%20Big%20Winter%20Catch.pdf', this)">
-                    예준이의 겨울 낚시 일기
-                </button>
-            </li>
-            <li>
-                <button class="pdf-item" onclick="loadPDF('https://tojidi-debug.github.io/doyaa/Kite_Kor.pdf', this)">
-                    예준이의 빙어낚시(한)
-                </button>
-            </li>
-            <!-- 추가 PDF 파일들을 여기에 추가하세요 -->
-        </ul>
+      </div>
+      
+      <div class="nav-area">
+        <button id="btn-db" class="nav-btn db-custom-style" onclick="goLink('frame', 'https://script.google.com/macros/s/AKfycbydRT4eYEvv3cG9eNOmmiyXniUmFik7QH-gW_jcC9EpdvJSg3w3Cqv7GIVz6XDNhvAF/exec', this)">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M12,3C7.58,3,4,4.79,4,7s3.58,4,8,4s8-1.79,8-4S16.42,3,12,3z M12,9C8.13,9,5,7.88,5,7s3.13-2,7-2s7,1.12,7,2S15.87,9,12,9z M12,11c-4.42,0-8,1.79-8,4v2c0,2.21,3.58,4,8,4s8-1.79,8-4v-2C20,12.79,16.42,11,12,11z M12,19c-3.87,0-7-1.12-7-2v-2c0-0.88,3.13-2,7-2s7,1.12,7,2v2C19,17.88,15.87,19,12,19z"/>
+          </svg>
+          <span class="btn-text">질의회신DB</span>
+        </button>
+
+        <button id="btn-review-db" class="nav-btn db-custom-style" onclick="goLink('new', 'https://tojidi-debug.github.io/kicpadb/', this)">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M12,3C7.58,3,4,4.79,4,7s3.58,4,8,4s8-1.79,8-4S16.42,3,12,3z M12,9C8.13,9,5,7.88,5,7s3.13-2,7-2s7,1.12,7,2S15.87,9,12,9z M12,11c-4.42,0-8,1.79-8,4v2c0,2.21,3.58,4,8,4s8-1.79,8-4v-2C20,12.79,16.42,11,12,11z M12,19c-3.87,0-7-1.12-7-2v-2c0-0.88,3.13-2,7-2s7,1.12,7,2v2C19,17.88,15.87,19,12,19z"/>
+          </svg>
+          <span class="btn-text">심사조치DB</span>
+        </button>
+
+        <button id="btn-audit-db" class="nav-btn db-custom-style" onclick="goLink('new', 'https://tojidi-debug.github.io/kicpadb/index1.html', this)">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M12,3C7.58,3,4,4.79,4,7s3.58,4,8,4s8-1.79,8-4S16.42,3,12,3z M12,9C8.13,9,5,7.88,5,7s3.13-2,7-2s7,1.12,7,2S15.87,9,12,9z M12,11c-4.42,0-8,1.79-8,4v2c0,2.21,3.58,4,8,4s8-1.79,8-4v-2C20,12.79,16.42,11,12,11z M12,19c-3.87,0-7-1.12-7-2v-2c0-0.88,3.13-2,7-2s7,1.12,7,2v2C19,17.88,15.87,19,12,19z"/>
+          </svg>
+          <span class="btn-text">감리조치DB</span>
+        </button>
+
+        <button id="btn-standard-search" class="nav-btn db-custom-style" onclick="goLink('frame', 'https://tojidi-debug.github.io/kicpadb/search.html', this)">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M12,3C7.58,3,4,4.79,4,7s3.58,4,8,4s8-1.79,8-4S16.42,3,12,3z M12,9C8.13,9,5,7.88,5,7s3.13-2,7-2s7,1.12,7,2S15.87,9,12,9z M12,11c-4.42,0-8,1.79-8,4v2c0,2.21,3.58,4,8,4s8-1.79,8-4v-2C20,12.79,16.42,11,12,11z M12,19c-3.87,0-7-1.12-7-2v-2c0-0.88,3.13-2,7-2s7,1.12,7,2v2C19,17.88,15.87,19,12,19z"/>
+          </svg>
+          <span class="btn-text">기준서검색</span>
+        </button>
+
+        <button id="btn-review-flow" class="nav-btn flow-btn-style" onclick="goLink('frame', 'https://tojidi-debug.github.io/home/review%20flow.html', this)">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+          <span class="btn-text">심사FLOW</span>
+        </button>
+
+        <button id="btn-inspection-flow" class="nav-btn flow-btn-style" onclick="goLink('frame', 'https://tojidi-debug.github.io/home/inspection%20flow.html', this)">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+          <span class="btn-text">감리FLOW</span>
+        </button>
+
+        <button id="btn-pdf-work" class="nav-btn db-custom-style" onclick="goLink('frame', 'https://tojidi-debug.github.io/kicpadb/pdf.html', this)">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"/>
+          </svg>
+          <span class="btn-text">PDF편집</span>
+        </button>
+      </div>
+
+      <button class="hans-system-btn" onclick="window.location.href='https://tojidi-debug.github.io/home/'">
+        <span class="btn-text">HanSSystem</span>
+      </button>
+    </header>
+
+    <div class="content-wrapper">
+      <iframe id="content-frame" src="about:blank"></iframe>
+      <iframe id="hidden-frame" src="about:blank"></iframe>
     </div>
+  </div>
 
-    <!-- 오른쪽 메인 영역 -->
-    <div id="main-area">
-        <div id="loading">
-            <div class="spinner"></div>
-            <p>PDF를 불러오는 중...</p>
-        </div>
-
-        <div id="page-counter" style="display: none;">
-            <span id="current-page">1</span> / <span id="total-pages">0</span>
-        </div>
-
-        <div id="book-container">
-            <div id="flipbook"></div>
-        </div>
-
-        <!-- 클릭 존 (좌/우 클릭으로 페이지 넘김) -->
-        <div id="zone-prev" class="click-zone" onclick="previousPage()"></div>
-        <div id="zone-next" class="click-zone" onclick="nextPage()"></div>
-
-        <!-- 네비게이션 버튼 -->
-        <div class="nav-controls">
-            <button class="nav-btn" id="btn-prev" onclick="previousPage()">◀ 이전</button>
-            <button class="nav-btn" id="btn-first" onclick="goToFirstPage()">첫 페이지</button>
-            <button class="nav-btn" id="btn-next" onclick="nextPage()">다음 ▶</button>
-        </div>
+  <div id="custom-alert">
+    <div class="modal-content">
+      <div class="modal-title">
+        <svg class="modal-icon" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        <span>시스템 알림</span>
+      </div>
+      <div id="modal-text" class="modal-message"></div>
+      <button class="modal-btn" onclick="closeAlert()">확인</button>
     </div>
+  </div>
 
-    <script>
-        let pdfDoc = null;
-        let totalPages = 0;
-        let currentPage = 0;
-        let flipbookInitialized = false;
+  <script>
+    // 페이지 이동 함수
+    function goLink(type, url, el) {
+      if (type === 'new') {
+        // 새 창이 아닌 현재 창 전체에서 페이지 이동
+        // 숨겨진 iframe에 먼저 로드
+        document.getElementById('hidden-frame').src = url;
+        
+        // 약간의 지연 후 전체 페이지 이동
+        setTimeout(function() {
+          window.location.href = url;
+        }, 100);
+      } else {
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        if(el) el.classList.add('active');
+        document.getElementById('content-frame').src = url;
+      }
+    }
 
-        // 오른쪽 영역의 너비 계산 함수
-        function getMainAreaWidth() {
-            const sidebarWidth = 190;
-            const availableWidth = window.innerWidth - sidebarWidth;
-            return Math.max(availableWidth, 500);
+    // 알림창 표시
+    function showAlert(message) {
+      document.getElementById('modal-text').innerText = message;
+      document.getElementById('custom-alert').style.display = 'flex';
+    }
+
+    // 알림창 닫기
+    function closeAlert() {
+      document.getElementById('custom-alert').style.display = 'none';
+    }
+
+    // 보안 설정 - 우클릭 방지
+    document.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      showAlert('우클릭 금지');
+      // 1초 후 자동으로 알림창 닫기
+      setTimeout(closeAlert, 1000);
+    });
+
+    // 보안 설정 - 키보드 단축키 방지 (F12, Ctrl+Shift+I, Ctrl+U 등)
+    document.addEventListener('keydown', e => {
+      // F12 키
+      if (e.keyCode === 123) {
+        e.preventDefault();
+        showAlert('개발자 도구는 사용할 수 없습니다.');
+        return false;
+      }
+      
+      // Ctrl+Shift+I (개발자 도구)
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+        e.preventDefault();
+        showAlert('개발자 도구는 사용할 수 없습니다.');
+        return false;
+      }
+      
+      // Ctrl+Shift+J (콘솔)
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+        e.preventDefault();
+        showAlert('개발자 도구는 사용할 수 없습니다.');
+        return false;
+      }
+      
+      // Ctrl+U (소스 보기)
+      if (e.ctrlKey && e.keyCode === 85) {
+        e.preventDefault();
+        showAlert('소스 보기는 사용할 수 없습니다.');
+        return false;
+      }
+      
+      // Ctrl+Shift+C (요소 검사)
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
+        e.preventDefault();
+        showAlert('요소 검사는 사용할 수 없습니다.');
+        return false;
+      }
+    });
+
+    // 보안 설정 - 텍스트 선택 방지
+    document.addEventListener('selectstart', e => {
+      e.preventDefault();
+      return false;
+    });
+
+    // 보안 설정 - 드래그 방지
+    document.addEventListener('dragstart', e => {
+      e.preventDefault();
+      return false;
+    });
+
+    // 보안 설정 - 복사 방지
+    document.addEventListener('copy', e => {
+      e.preventDefault();
+      return false;
+    });
+
+    // 페이지 로드 시 실행
+    window.onload = function() {
+      // 접속 시 기준서검색 웹페이지가 바로 보이도록 설정
+      const standardSearchBtn = document.getElementById('btn-standard-search');
+      if (standardSearchBtn) {
+        standardSearchBtn.click();
+      }
+      
+      // 별과 유성 생성
+      createStars();
+      createShootingStars();
+    };
+
+    // 반짝이는 별 생성
+    function createStars() {
+      const starsContainer = document.createElement('div');
+      starsContainer.className = 'stars';
+      document.querySelector('.wrapper').appendChild(starsContainer);
+      
+      for (let i = 0; i < 80; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        star.style.animationDuration = (2 + Math.random() * 2) + 's';
+        starsContainer.appendChild(star);
+      }
+    }
+
+    // 유성 생성
+    function createShootingStars() {
+      setInterval(() => {
+        if (Math.random() > 0.7) {
+          const star = document.createElement('div');
+          star.className = 'shooting-star';
+          star.style.left = (Math.random() * 50 + 10) + '%';
+          star.style.top = (Math.random() * 30 + 10) + '%';
+          document.querySelector('.wrapper').appendChild(star);
+          
+          setTimeout(() => star.remove(), 2000);
         }
+      }, 3000);
+    }
+  </script>
 
-        // PDF 로드 함수
-        async function loadPDF(url, buttonElement) {
-            // 활성 버튼 스타일 변경
-            document.querySelectorAll('.pdf-item').forEach(btn => btn.classList.remove('active'));
-            if (buttonElement) buttonElement.classList.add('active');
-
-            // 로딩 화면 표시
-            document.getElementById('loading').style.display = 'flex';
-            document.getElementById('flipbook').style.display = 'none';
-            document.getElementById('page-counter').style.display = 'none';
-
-            // 기존 플립북 제거
-            if (flipbookInitialized) {
-                $('#flipbook').turn('destroy');
-                flipbookInitialized = false;
-            }
-            document.getElementById('flipbook').innerHTML = '';
-
-            try {
-                // PDF 문서 로드
-                pdfDoc = await pdfjsLib.getDocument(url).promise;
-                totalPages = pdfDoc.numPages;
-                
-                // 각 페이지를 캔버스로 렌더링
-                for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-                    const page = await pdfDoc.getPage(pageNum);
-                    const viewport = page.getViewport({ scale: 2.0 });
-                    
-                    // 페이지 div 생성
-                    const pageDiv = document.createElement('div');
-                    pageDiv.className = 'page';
-                    pageDiv.setAttribute('data-page', pageNum);
-                    
-                    // 캔버스 생성
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-                    
-                    // PDF 페이지 렌더링
-                    await page.render({
-                        canvasContext: context,
-                        viewport: viewport
-                    }).promise;
-                    
-                    pageDiv.appendChild(canvas);
-                    document.getElementById('flipbook').appendChild(pageDiv);
-                }
-
-                // 플립북 초기화 (단면 모드)
-                initFlipbook();
-                
-                // 로딩 화면 숨기기
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('flipbook').style.display = 'block';
-                document.getElementById('page-counter').style.display = 'block';
-                
-                updatePageCounter(1);
-                
-            } catch (error) {
-                console.error('PDF 로드 오류:', error);
-                document.getElementById('loading').innerHTML = '<p style="color: red;">PDF를 불러올 수 없습니다.</p>';
-            }
-        }
-
-        // 플립북 초기화 (단면 모드)
-        function initFlipbook() {
-            const flipbook = $('#flipbook');
-            const width = getMainAreaWidth();
-            const height = window.innerHeight;
-            
-            flipbook.turn({
-                width: width,
-                height: height,
-                autoCenter: true,
-                display: 'single',  // 단면 모드로 한 페이지만 표시
-                duration: 800,
-                pages: totalPages,
-                when: {
-                    turning: function(event, page, view) {
-                        currentPage = page;
-                        updatePageCounter(page);
-                    }
-                }
-            });
-            
-            flipbookInitialized = true;
-        }
-
-        // 다음 페이지
-        function nextPage() {
-            if (flipbookInitialized) {
-                const currentPageNum = $('#flipbook').turn('page');
-                if (currentPageNum < totalPages) {
-                    $('#flipbook').turn('next');
-                }
-            }
-        }
-
-        // 이전 페이지
-        function previousPage() {
-            if (flipbookInitialized) {
-                const currentPageNum = $('#flipbook').turn('page');
-                if (currentPageNum > 1) {
-                    $('#flipbook').turn('previous');
-                }
-            }
-        }
-
-        // 첫 페이지로
-        function goToFirstPage() {
-            if (flipbookInitialized) {
-                $('#flipbook').turn('page', 1);
-            }
-        }
-
-        // 페이지 카운터 업데이트
-        function updatePageCounter(page) {
-            document.getElementById('current-page').textContent = page;
-            document.getElementById('total-pages').textContent = totalPages;
-            
-            // 버튼 활성/비활성
-            document.getElementById('btn-prev').disabled = (page === 1);
-            document.getElementById('btn-next').disabled = (page === totalPages);
-            document.getElementById('btn-first').disabled = (page === 1);
-        }
-
-        // 키보드 네비게이션
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowLeft') previousPage();
-            if (e.key === 'ArrowRight') nextPage();
-            if (e.key === 'Home') goToFirstPage();
-        });
-
-        // 페이지 로드 시 첫 번째 PDF 자동 로드
-        window.addEventListener('DOMContentLoaded', () => {
-            const firstButton = document.querySelector('.pdf-item');
-            if (firstButton) {
-                firstButton.click();
-            }
-        });
-
-        // 윈도우 리사이즈 시 플립북 크기 조정
-        window.addEventListener('resize', function() {
-            if (flipbookInitialized) {
-                const width = getMainAreaWidth();
-                const height = window.innerHeight;
-                $('#flipbook').turn('size', width, height);
-            }
-        });
-    </script>
 </body>
 </html>
-
