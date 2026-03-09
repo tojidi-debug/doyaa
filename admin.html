@@ -6,23 +6,19 @@
   <title>Admin 로그인</title>
   <style>
     *, *::before, *::after {
-      margin: 0; padding: 0;
-      box-sizing: border-box;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+      margin: 0; padding: 0; box-sizing: border-box;
+      -webkit-user-select: none; -moz-user-select: none;
+      -ms-user-select: none; user-select: none;
     }
     html, body {
-      width: 100%; height: 100%;
-      overflow: hidden;
+      width: 100%; height: 100%; overflow: hidden;
       font-family: 'Pretendard', 'Malgun Gothic', -apple-system, sans-serif;
       background: #000;
     }
 
-    /* ━━━━━━━━━━━━━━━━━━━━━━
-       ① 로그인 화면
-    ━━━━━━━━━━━━━━━━━━━━━━ */
+    /* ━━━━━━━━━━━━━━━━━━
+       로그인 화면
+    ━━━━━━━━━━━━━━━━━━ */
     #login-screen {
       position: fixed; inset: 0;
       display: flex; align-items: center; justify-content: center;
@@ -32,10 +28,12 @@
         radial-gradient(ellipse at bottom, #0d1b3e 0%, #000000 100%);
     }
 
-    @keyframes starfield { 0%{transform:translateY(0)}  100%{transform:translateY(-2000px)} }
+    @keyframes starfield { 0%{transform:translateY(0)} 100%{transform:translateY(-2000px)} }
     @keyframes twinkle   { 0%,100%{opacity:0.3} 50%{opacity:1} }
-    @keyframes nebula    { 0%,100%{opacity:0.3;transform:scale(1) rotate(0deg)}
-                           50%{opacity:0.6;transform:scale(1.1) rotate(5deg)} }
+    @keyframes nebula    {
+      0%,100%{opacity:0.3;transform:scale(1) rotate(0deg)}
+      50%    {opacity:0.6;transform:scale(1.1) rotate(5deg)}
+    }
 
     .space-bg {
       position: absolute; inset: 0; pointer-events: none; opacity: 0.6;
@@ -60,9 +58,8 @@
     }
     .stars { position: absolute; inset: 0; pointer-events: none; }
     .star {
-      position: absolute; width: 2px; height: 2px;
-      background: #fff; border-radius: 50%;
-      box-shadow: 0 0 4px rgba(255,255,255,0.8);
+      position: absolute; width: 2px; height: 2px; background: #fff;
+      border-radius: 50%; box-shadow: 0 0 4px rgba(255,255,255,0.8);
       animation: twinkle 3s ease-in-out infinite;
     }
 
@@ -70,14 +67,12 @@
       position: relative; z-index: 10;
       background: rgba(13,27,62,0.95);
       backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      padding: 48px 44px 40px;
-      border-radius: 20px;
+      padding: 48px 44px 40px; border-radius: 20px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5),
                   0 0 50px rgba(255,255,255,0.08) inset;
       border: 1px solid rgba(255,255,255,0.2);
       width: 440px; max-width: 92vw;
     }
-
     .admin-icon {
       width: 52px; height: 52px;
       background: linear-gradient(135deg, #2a2a3a, #3a3a5a);
@@ -87,7 +82,6 @@
       box-shadow: 0 0 20px rgba(255,255,255,0.15);
     }
     .admin-icon svg { width: 28px; height: 28px; fill: #fff; }
-
     .logo-text {
       font-size: 22px; font-weight: 800; color: #fff;
       text-align: center; margin-bottom: 4px;
@@ -98,14 +92,11 @@
       text-align: center; margin-bottom: 28px; letter-spacing: 0.5px;
     }
 
-    /* 실패 횟수 표시 */
     #fail-info {
-      font-size: 12px; color: rgba(255,110,110,0.85);
-      text-align: right; margin-bottom: 8px; min-height: 16px;
-      font-weight: 600;
+      font-size: 12px; color: rgba(255,110,110,0.9);
+      text-align: right; margin-bottom: 8px; min-height: 16px; font-weight: 600;
     }
 
-    /* 입력 필드 */
     .input-field { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
     .input-label { color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; min-width: 72px; }
     .input-field input {
@@ -118,18 +109,15 @@
     }
     .input-field input::placeholder { color: rgba(255,255,255,0.3); }
     .input-field input:focus {
-      outline: none;
-      border-color: rgba(255,255,255,0.6);
+      outline: none; border-color: rgba(255,255,255,0.6);
       background: rgba(255,255,255,0.12);
     }
 
-    /* 버튼 그룹 */
     .btn-group { display: flex; gap: 8px; margin-top: 22px; }
 
     /* 확 인 — 빨간색 */
     .login-btn {
-      flex: 1.2; padding: 13px 6px;
-      border: none; border-radius: 8px;
+      flex: 1.2; padding: 13px 6px; border: none; border-radius: 8px;
       background: linear-gradient(135deg, #c62828, #e53935);
       color: #fff; font-weight: 800; font-size: 14px;
       cursor: pointer; transition: all 0.3s; font-family: inherit;
@@ -140,7 +128,7 @@
       transform: translateY(-2px); box-shadow: 0 6px 20px rgba(229,57,53,0.55);
     }
 
-    /* 뒤로가기 — 네이비 계열 */
+    /* 뒤로가기 — 네이비 */
     .back-btn {
       flex: 1; padding: 13px 6px;
       border: 1px solid rgba(255,255,255,0.28); border-radius: 8px;
@@ -149,8 +137,7 @@
       cursor: pointer; transition: all 0.3s; font-family: inherit;
     }
     .back-btn:hover {
-      background: rgba(50,80,180,0.7);
-      border-color: rgba(255,255,255,0.5);
+      background: rgba(50,80,180,0.7); border-color: rgba(255,255,255,0.5);
       color: #fff; transform: translateY(-2px);
     }
 
@@ -167,33 +154,30 @@
       border-color: rgba(255,255,255,0.4); color: #fff;
     }
 
-    /* ━━━━━━━━━━━━━━━━━━━━━━
-       ② 로그인 성공 후 전체화면
-          (URL = admin.html 유지)
-    ━━━━━━━━━━━━━━━━━━━━━━ */
+    /* ━━━━━━━━━━━━━━━━━━
+       standalone 모드 전용:
+       로그인 성공 후 flow.html 전체화면
+       (URL = admin.html 유지)
+    ━━━━━━━━━━━━━━━━━━ */
     #flow-screen {
-      display: none;
-      position: fixed; inset: 0;
-      flex-direction: column;
-      background: #000;
-      z-index: 200;
+      display: none; position: fixed; inset: 0;
+      flex-direction: column; background: #000; z-index: 200;
     }
     /* URL 마스킹용 0.5px 더미 iframe */
     #top-mask {
-      width: 100%; height: 0.5px; min-height: 0;
-      flex-shrink: 0; border: none;
-      visibility: hidden; pointer-events: none; overflow: hidden;
+      width: 100%; height: 0.5px; min-height: 0; flex-shrink: 0;
+      border: none; visibility: hidden; pointer-events: none; overflow: hidden;
     }
-    /* flow.html 메인 iframe (나머지 전체) */
+    /* flow.html 표시 iframe */
     #main-frame { width: 100%; flex: 1; border: none; display: block; }
 
-    /* ━━━━━━━━━━━━━━━━━━━━━━
-       ③ 알림 모달
-    ━━━━━━━━━━━━━━━━━━━━━━ */
+    /* ━━━━━━━━━━━━━━━━━━
+       알림 모달
+    ━━━━━━━━━━━━━━━━━━ */
     #modal {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.65);
-      z-index: 9999; justify-content: center; align-items: center;
+      background: rgba(0,0,0,0.65); z-index: 9999;
+      justify-content: center; align-items: center;
     }
     .modal-box {
       background: rgba(13,27,62,0.98);
@@ -208,19 +192,17 @@
       color: #fff; font-weight: 700; cursor: pointer; font-family: inherit;
     }
 
-    /* ━━━━━━━━━━━━━━━━━━━━━━
-       ④ 5회 실패 잠금 화면
-    ━━━━━━━━━━━━━━━━━━━━━━ */
+    /* ━━━━━━━━━━━━━━━━━━
+       5회 실패 잠금 화면
+    ━━━━━━━━━━━━━━━━━━ */
     #lock-screen {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.93);
-      z-index: 10000;
-      flex-direction: column;
-      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.93); z-index: 10000;
+      flex-direction: column; align-items: center; justify-content: center;
       color: #fff; gap: 14px;
     }
     .lock-icon  { font-size: 56px; }
-    .lock-msg   { font-size: 17px; color: #ff6b6b; font-weight: 800; letter-spacing: 0.5px; }
+    .lock-msg   { font-size: 17px; color: #ff6b6b; font-weight: 800; }
     .lock-sub   { font-size: 13px; color: rgba(255,255,255,0.5); }
     .lock-count { font-size: 28px; font-weight: 900; color: #FFD700; margin-top: 4px; }
   </style>
@@ -255,8 +237,6 @@
           <label class="input-label">비밀번호</label>
           <input type="password" id="password" placeholder="비밀번호를 입력하세요" autocomplete="current-password">
         </div>
-
-        <!-- [확 인] [뒤로가기] [Clear] -->
         <div class="btn-group">
           <button type="button" class="login-btn" onclick="handleLogin()">확 인</button>
           <button type="button" class="back-btn"  onclick="goBack()">뒤로가기</button>
@@ -266,7 +246,7 @@
     </div>
   </div>
 
-  <!-- ② 로그인 성공 후 전체화면 (URL = admin.html 유지) -->
+  <!-- ② standalone 모드: flow.html 전체화면 (URL=admin.html 유지) -->
   <div id="flow-screen">
     <iframe id="top-mask"   src="about:blank" tabindex="-1" aria-hidden="true"></iframe>
     <iframe id="main-frame" src="about:blank" allowfullscreen></iframe>
@@ -317,29 +297,6 @@
       const saved = localStorage.getItem('adminEmail');
       if (saved) document.getElementById('email').value = saved;
       document.getElementById('email').focus();
-
-      /*
-       * ★ aihome.html 의 content-frame 안에 로드된 경우
-       *   → window.frameElement 로 그 iframe을 전체화면으로 확장
-       *   → 결과: admin 로그인 박스가 브라우저 전체를 덮음
-       *   → aihome.html 헤더는 iframe 뒤에 가려져 보이지 않음
-       */
-      if (window.self !== window.top) {
-        try {
-          const frame = window.frameElement; /* 부모의 <iframe> 엘리먼트 */
-          if (frame) {
-            frame.style.position = 'fixed';
-            frame.style.top      = '0';
-            frame.style.left     = '0';
-            frame.style.width    = '100vw';
-            frame.style.height   = '100vh';
-            frame.style.zIndex   = '99999';
-            frame.style.border   = 'none';
-            /* 부모 페이지 스크롤 잠금 */
-            window.top.document.body.style.overflow = 'hidden';
-          }
-        } catch (e) { /* 크로스오리진 예외 무시 */ }
-      }
     };
 
     /* ── 로그인 처리 ── */
@@ -361,9 +318,7 @@
         failCount++;
         document.getElementById('fail-info').textContent =
           '로그인 실패 ' + failCount + ' / ' + MAX_FAIL + '회';
-        if (failCount >= MAX_FAIL) {
-          triggerLock(); return;
-        }
+        if (failCount >= MAX_FAIL) { triggerLock(); return; }
         showModal('정보 불일치, 관리자만 접속 허용', false);
         return;
       }
@@ -374,22 +329,64 @@
       launchFlow();
     }
 
-    /* flow.html 전체화면 표시 */
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       launchFlow()
+       ─────────────────────────────────────
+       [경우 A] iframe 내부 (aihome content-frame)
+         → window.top.document 에 전체화면 오버레이 iframe 삽입
+           (0.5px top-mask + 나머지 전체 main iframe)
+           → 브라우저 주소창 URL 은 aihome.html 그대로 유지
+           → aihome.html 헤더가 완전히 가려짐
+
+       [경우 B] 직접 접근 (standalone)
+         → admin.html 내부 #flow-screen div 를 flex 로 전환
+           (0.5px top-mask + 나머지 전체 main iframe)
+           → 브라우저 주소창 URL 은 admin.html 그대로 유지
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
     function launchFlow() {
+
       if (window.self !== window.top) {
-        /*
-         * iframe 모드:
-         *   이미 전체화면으로 확장된 iframe 안에서 flow.html 로 이동
-         *   → flow.html 의 자체 헤더가 그대로 표시됨 (aihome 헤더 중복 없음)
-         *   → 부모 URL(aihome.html) 은 변경되지 않음
-         */
-        location.href = FLOW_URL;
+        /* ━━ 경우 A: iframe 내부 모드 ━━
+           window.top.document 에 직접 오버레이 DOM 삽입 */
+        try {
+          const topDoc  = window.top.document;
+          const topBody = topDoc.body;
+
+          /* 부모 페이지 스크롤 잠금 */
+          topBody.style.overflow = 'hidden';
+
+          /* 오버레이 컨테이너 */
+          const overlay = topDoc.createElement('div');
+          overlay.id = '__admin_flow_overlay__';
+          overlay.style.cssText =
+            'position:fixed;top:0;left:0;width:100vw;height:100vh;' +
+            'display:flex;flex-direction:column;background:#000;z-index:2147483647;';
+
+          /* 0.5px top-mask iframe (URL 마스킹 더미) */
+          const topMask = topDoc.createElement('iframe');
+          topMask.src = 'about:blank';
+          topMask.style.cssText =
+            'width:100%;height:0.5px;min-height:0;flex-shrink:0;' +
+            'border:none;visibility:hidden;pointer-events:none;overflow:hidden;';
+          topMask.tabIndex = -1;
+
+          /* 실제 flow.html iframe (나머지 전체) */
+          const mainFr = topDoc.createElement('iframe');
+          mainFr.src = FLOW_URL;
+          mainFr.allowFullscreen = true;
+          mainFr.style.cssText = 'width:100%;flex:1;border:none;display:block;';
+
+          overlay.appendChild(topMask);
+          overlay.appendChild(mainFr);
+          topBody.appendChild(overlay);
+
+        } catch (e) {
+          /* cross-origin 등 예외 → fallback: top 페이지 이동 */
+          window.top.location.href = FLOW_URL;
+        }
+
       } else {
-        /*
-         * 직접 접근(standalone) 모드:
-         *   로그인 화면 숨기고 #flow-screen iframe에 flow.html 표시
-         *   → top-mask 0.5px 유지로 URL 변경 없음
-         */
+        /* ━━ 경우 B: standalone 모드 ━━ */
         document.getElementById('login-screen').style.display = 'none';
         const fs = document.getElementById('flow-screen');
         fs.style.display = 'flex';
@@ -410,12 +407,19 @@
       }, 1000);
     }
 
-    /* 뒤로가기 — iframe이면 부모(aihome.html) 새로고침, standalone이면 history.back() */
+    /* 뒤로가기 */
     function goBack() {
       if (window.self !== window.top) {
-        try { window.top.document.body.style.overflow = ''; } catch(e) {}
+        /* iframe 내부: 부모 페이지(aihome.html) 새로고침 */
+        try {
+          /* 오버레이가 이미 삽입된 경우 제거 후 새로고침 */
+          const el = window.top.document.getElementById('__admin_flow_overlay__');
+          if (el) el.remove();
+          window.top.document.body.style.overflow = '';
+        } catch(e) {}
         window.top.location.reload();
       } else {
+        /* standalone: 브라우저 히스토리 뒤로 */
         history.back();
       }
     }
