@@ -12,8 +12,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      -webkit-user-select: none;
-      user-select: none;
+      /* ✅ user-select 제거 완료 */
     }
 
     body, html {
@@ -175,7 +174,7 @@
 
     /* 상단 헤더 - 은하수 배경 이미지 */
     header {
-      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB4AAAAB4CAIAAACcpnhrAABOy0lEQVR4nO2dd5zU1PrGnyh1C2Vt1CtL2VU67C6LDQWuXaQKKKg0sSBgQZoCoggsogiIFGkqSJGmKBdERLCxbKGrLCh4VdSfykVAiv6R3x/Znc3MZDIpJzknyftlPyE7kzl58+bk7MyTZ94jXVy5pQwReXvlJAD3dB/FOQ6J8/5FR4KY/ccaI57tnvPsSlMvSU5OBNCgQR0AGRlNAGRlNVGe6trtloiNV6/eCCAvbx+AgoJ9AA4dOgrg1Km/LEQrAYBkqodKonXo4vAtRiX7qvdFUZwb5aSpTl3pr8zOJ5NMygAgu3lKZF7d2YFToIGMkjNj4PyoN47N1InDh42eUvyLO0chNkqnhWwpDzo598fIFKheYepyUxD+/c8HK6cBuL3743x2z7v/LJg1of+gZzgHoYMkCdJ/lPexafUuB5DZsjGA7Izi97HdOt4c2mzVu5tC67kF+wDkF+4HUPTt97D6PlYP3v1HdIQff/R5anBfAAN6dUxOTp42Z4ny4IszFzHbAfUffQyPPxvefBHAbfc95Wg4whH4/rN99WwAbbo+rP20x8cfxwl8/9FHuqhSCzE70LJ3JgO4+66RnOOgDqSPjwagkeN7KCuTx61g1ebx/xVGPJKS0tJ+swalZ5FVJcmKfq6NrPObRwlJz6VL9VOOiIZy1Kq1VLoqQ7s8/kgoufjg0uVlVhSLJ0NPnTRi2KgcX0nPUsxfdLcEwPQWlhzjlzg7ML4lD7zeN3T58ZstAGpd0T7sUdUVtHrVZABdu8Z+F+qj9z+OwLX/nDyWD6BSjUyeQegjjACtz6mf8gAk18xye8e+Hn8Y4JfxZ/jgflNmLmTfLvUffQyPP/95ayqAW+8dFnfLTUtfBnBzrydsBSYIge8/n66ZA+C6Lg9pP+2X8ccpAt9/9CnDO4CY8JeeiYAxedyKkeN7WFafw6zQmU0BZGU1WbVqY3Z209q1a4Q2mzdvYmi9xAq9F/as0AFHGeTpD6FNJA/mMG7Aa5dMBtC5N/01KebGtq6LCNyJfBeoGjAYjh2hvchau2C1F4IgDKCoz8qK0Bq0F0iumbVw1gTeURAEwQcj0jPhP2JKz7H5/cAnAC5udAPzYPzNxsVTAdzSJ0AXmhAC9CefvQHghmvv5x0IEXTseJ8V7biw8ICy/OnY5wBq1rxm3ryJzZrdcfx4IRjZnwlNSIa2jxc1aCIuUyeNUFZubJuVkpKyZ8eqzVvzAEDCsNEv8ozMaaLN0VL4r0p3l5jW8lHvQv1dAhqhBCPS+xyFnveZEIDiwhH16yCqcISaha+ViqdhhSMOHwXd9ScIgmCET7zPBEE4jBACNEH4npSUlmrvs9OI/L16R2NTGvdFbWhX62+o9yr7SCpzxPvsZuUKCZAlSHLJ0sz2JVsPG5UTen7PjlXNWncL60g+QYr4P+zxWEdZ3NON5dZ6UColWh1JuFc6Z3L/ESMXOBAEQfgTRTsu2HUgtJy7YAWAd5e+uHXr1rZt20LwEhwEQQCO1N8gCMJ1yPtsDc95n3/btxXAJU3aWm7hAnbBWOeGa+8n+zPhM2rWuKZmjWucaDlu7eTAqs8u78UpQuKgrQka7e0fsFyfm1ltb9HwSt3k0v6jEeXmrXmeOZC4FB+jVKoyS6VPAFLxBJ4GiuU7ngpJHW34gwAg5UzuDwk5Of2dDEIU9u9YvX/Hat5RxMA3V4cBHhrQk3cIDlKpRuaqdRt5R8GHnR+9ufOjN3lHQRAEQRAEEQk5oAnCWZRCz+4g+CdmN8Pzj4lXxX+PfALgX3Wt33I0SEn2JMm16QQFRy1ICX2RBQAp7L/IOhuWb5vIrtSgiXRAFz8_V');
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAB4AAAAB4CAIAAACcpnhrAABOy0lEQVR4nO2dd5zU1PrGnyh1C2Vt1CtL2VU67C6LDQWuXaQKKKg0sSBgQZoCoggsogiIFGkqSJGmKBdERLCxbKGrLCh4VdSfykVAiv6R3x/Znc3MZDIpJzknyftlPyE7kzl58+bk7MyTZ94jXVy5pQwReXvlJAD3dB/FOQ6J8/5FR4KY/ccaI57tnvPsSlMvSU5OBNCgQR0AGRlNAGRlNVGe6trtloiNV6/eCCAvbx+AgoJ9AA4dOgrg1Km/LEQrAYBkqodKonXo4vAtRiX7qvdFUZwb5aSpTl3pr8zOJ5NMygAgu3lKZF7d2YFToIGMkjNj4PyoN47N1InDh42eUvyLO0chNkqnhWwpDzo798fIFKheYepyUxD+/c8HK6cBuL3743x2z7v/LJg1of+gZzgHoYMkCdJ/lPexafUuB5DZsjGA7Izi97HdOt4c2mzVu5tC67kF+wDkF+4HUPTt97D6PlYP3v1HdIQff/R5anBfAAN6dUxOTp42Z4ny4IszFzHbAfUffQyPPxvefBHAbfc95Wg4whH4/rN99WwAbbo+rP20x8cfxwl8/9FHuqhSCzE70LJ3JgO4+66RnOOgDqSPjwagkeN7KCuTx61g1ebx/xVGPJKS0tJ+swalZ5FVJcmKfq6NrPObRwlJz6VL9VOOiIZy1Kq1VLoqQ7s8/kgoufjg0uVlVhSLJ0NPnTRi2KgcX0nPUsxfdLcEwPQWlhzjlzg7ML4lD7zeN3T58ZstAGpd0T7sUdUVtHrVZABdu8Z+F+qj9z+OwLX/nDyWD6BSjUyeQegjjACtz6mf8gAk18xye8e+Hn8Y4JfxZ/jgflNmLmTfLvUffQyPP/95ayqAW+8dFnfLTUtfBnBzrydsBSYIge8/n66ZA+C6Lg9pP+2X8ccpAt9/9CnDO4CY8JeeiYAxedyKkeN7WFafw6zQmU0BZGU1WbVqY3Z209q1a4Q2mzdvYmi9xAq9F/as0AFHGeTpD6FNJA/mMG7Aa5dMBtC5N/01KebGtq6LCNyJfBeoGjAYjh2hvchau2C1F4IgDKCoz8qK0Bq0F0iumbVw1gTeURAEwQcj0jPhP2JKz7H5/cAnAC5udAPzYPzNxsVTAdzSJ0AXmhAC9CefvQHghmvv5x0IEXTseJ8V7biw8ICy/OnY5wBq1rxm3ryJzZrdcfx4IRjZnwlNSIa2jxc1aCIuUyeNUFZubJuVkpKyZ8eqzVvzAEDCsNEv8ozMaaLN0VL4r0p3l5jW8lHvQv1dAhqhBCPS+xyFnveZEIDiwhH16yCqcISaha+ViqdhhSMOHwXd9ScIgmCET7zPBEE4jBACNEH4npSUlmrvs9OI/L16R2NTGvdFbWhX62+o9yr7SCpzxPvsZuUKCZAlSHLJ0sz2JVsPG5UTen7PjlXNWncL60g+QYr4P+zxWEdZ3NON5dZ6UColWh1JuFc6Z3L/ESMXOBAEQfgTRTsu2HUgtJy7YAWAd5e+uHXr1rZt20LwEhwEQQCO1N8gCMJ1yPtsDc95n3/btxXAJU3aWm7hAnbBWOeGa+8n+zPhM2rWuKZmjWucaDlu7eTAqs8u78UpQuKgrQka7e0fsFyfm1ltb9HwSt3k0v6jEeXmrXmeOZC4FB+jVKoyS6VPAFLxBJ4GiuU7ngpJHW34gwAg5UzuDwk5Of2dDEIU9u9YvX/Hat5RxMA3V4cBHhrQk3cIDlKpRuaqdRt5R8GHnR+9ufOjN3lHQRAEQRAEEQk5oAnCWZRCz+4g+CdmN8Pzj4lXxX+PfALgX3Wt33I0SEn2JMm16QQFRy1ICX2RBQAp7L/IOhuWb5vIrtSgiXRAFz8_V');
       background-size: cover;
       height: 60px;
       display: flex;
@@ -641,11 +640,7 @@
     // 페이지 이동 함수
     function goLink(type, url, el) {
       if (type === 'new') {
-        // 새 창이 아닌 현재 창 전체에서 페이지 이동
-        // 숨겨진 iframe에 먼저 로드
         document.getElementById('hidden-frame').src = url;
-        
-        // 약간의 지연 후 전체 페이지 이동
         setTimeout(function() {
           window.location.href = url;
         }, 100);
@@ -667,79 +662,16 @@
       document.getElementById('custom-alert').style.display = 'none';
     }
 
-    // 보안 설정 - 우클릭 방지
-    document.addEventListener('contextmenu', e => {
-      e.preventDefault();
-      showAlert('우클릭 금지');
-      // 1초 후 자동으로 알림창 닫기
-      setTimeout(closeAlert, 1000);
-    });
-
-    // 보안 설정 - 키보드 단축키 방지 (F12, Ctrl+Shift+I, Ctrl+U 등)
-    document.addEventListener('keydown', e => {
-      // F12 키
-      if (e.keyCode === 123) {
-        e.preventDefault();
-        showAlert('개발자 도구는 사용할 수 없습니다.');
-        return false;
-      }
-      
-      // Ctrl+Shift+I (개발자 도구)
-      if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-        e.preventDefault();
-        showAlert('개발자 도구는 사용할 수 없습니다.');
-        return false;
-      }
-      
-      // Ctrl+Shift+J (콘솔)
-      if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-        e.preventDefault();
-        showAlert('개발자 도구는 사용할 수 없습니다.');
-        return false;
-      }
-      
-      // Ctrl+U (소스 보기)
-      if (e.ctrlKey && e.keyCode === 85) {
-        e.preventDefault();
-        showAlert('소스 보기는 사용할 수 없습니다.');
-        return false;
-      }
-      
-      // Ctrl+Shift+C (요소 검사)
-      if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
-        e.preventDefault();
-        showAlert('요소 검사는 사용할 수 없습니다.');
-        return false;
-      }
-    });
-
-    // 보안 설정 - 텍스트 선택 방지
-    document.addEventListener('selectstart', e => {
-      e.preventDefault();
-      return false;
-    });
-
-    // 보안 설정 - 드래그 방지
-    document.addEventListener('dragstart', e => {
-      e.preventDefault();
-      return false;
-    });
-
-    // 보안 설정 - 복사 방지
-    document.addEventListener('copy', e => {
-      e.preventDefault();
-      return false;
-    });
+    // ✅ 보안 제한 이벤트 리스너 전체 제거됨
+    // (우클릭 방지 / 키보드 단축키 방지 / 텍스트 선택 방지 / 드래그 방지 / 복사 방지)
 
     // 페이지 로드 시 실행
     window.onload = function() {
-      // 접속 시 기준서검색 웹페이지가 바로 보이도록 설정
       const standardSearchBtn = document.getElementById('btn-standard-search');
       if (standardSearchBtn) {
         standardSearchBtn.click();
       }
       
-      // 별과 유성 생성
       createStars();
       createShootingStars();
     };
